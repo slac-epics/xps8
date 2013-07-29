@@ -1,0 +1,105 @@
+# Make rules to copy files into a specific subdirectory in the
+# INSTALL_LOCATION.  Useful for files that are relevant to a
+# particular version of an IOC but aren't built or modified during the
+# make process.  Examples might be EDM files, ASYN protocol files,
+# autosave definition files, IOC startup files, etc.
+
+# Author: Jason Tiller
+
+# Do nothing if the caller hasn't set the required variables.
+files_set=$(if $(COPY_FILES),1,0)
+subdir_set=$(if $(COPY_SUBDIR),1,0)
+ifeq ($(files_set)$(subdir_set),11)
+
+# Display how this makefile was called.
+$(info RULES.copy: '$(MAKECMDGOALS)')
+
+# For the standard development build, the 'INSTALL_LOCATION' is just
+# the current directory.  For some directory structures, they only
+# want to be copied if the INSTALL_LOCATION is different from the
+# package's TOP directory.  An IOC's iocBoot directory is an example -
+# because it hangs off the TOP directory, installing to itself would
+# make no sense and would actually be destructive when 'make clean' is
+# called.  In this case, only when the INSTALL_LOCATION is different
+# do we want to do anything.
+
+# This makefile is configured by three make variables that should be
+# set before this file is included:
+
+# COPY_ONLY_IF_NON_LOCAL
+#    Define this if you only want the install/clean operation to occur
+#    IF the installation directory is different from the IOC's <top>
+#    source directory.
+
+# COPY_SUBDIR
+#    Set this to the target directory where your files should be
+#    copied.  This is relative to INSTALL_LOCATION.
+
+# COPY_FILES
+#    Set this to the list of files, space-separated, that you want to
+#    have copied into COPY_SUBDIR.
+
+# Add 'include RULES.copy' to bottom of Makefile in the source
+# directory after setting the 'COPY_{SUBDIR,FILES}' variables and
+# optionally setting the 'COPY_ONLY_...' flag.
+
+INSTALL_DIR = $(INSTALL_LOCATION)/$(COPY_SUBDIR)
+INSTALL_FILES = $(COPY_FILES:%=$(INSTALL_DIR)/%)
+
+all: install
+
+rebuild: clean install
+
+INSTALL = $(PERL) $(TOOLS)/installEpics.pl
+
+# If the source makefile doesn't set this, we'll always perform the
+# copy/clean operation, regardless of installation directory.
+ifndef COPY_ONLY_IF_NON_LOCAL
+
+install: $(INSTALL_FILES)
+
+buildInstall: $(INSTALL_FILES)
+
+$(INSTALL_FILES): $(COPY_FILES)
+	@echo "RULES.copy: Installing $(@F) -> $(@D)"
+	@$(INSTALL) -d -m 644 $(@F) $(@D)
+
+clean::
+	@echo RULES.copy: Cleaning $(INSTALL_DIR)
+	rm -rf $(INSTALL_DIR)
+
+else
+
+# If the flag is set, then we look at the install location.
+ifeq ($(patsubst $(TOP),,$(INSTALL_LOCATION)),)
+
+# We're installing locally, so don't try to copy or respond to clean
+# requests because we might overwrite/delete something important.
+
+install:
+
+else
+
+# The flag was set, but we're not installing locally, so perform the
+# complete operations.
+
+install: $(INSTALL_FILES)
+
+buildInstall: $(INSTALL_FILES)
+
+$(INSTALL_FILES): $(COPY_FILES)
+	@echo "RULES.copy: Installing $(@F) -> $(@D)"
+	@$(INSTALL) -d -m 644 $(@F) $(@D)
+
+clean::
+	@echo RULES.copy: Cleaning $(INSTALL_DIR)
+	rm -rf $(INSTALL_DIR)
+
+# endif the flag was set and the install directory is different.
+endif
+
+# endif the flag wasn't set
+endif
+
+# endif both configuration variables weren't set
+endif

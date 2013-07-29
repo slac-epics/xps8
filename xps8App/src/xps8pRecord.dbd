@@ -1,0 +1,545 @@
+include "menuYesNo.dbd"
+
+menu(xps8pDIR) {
+        choice(xps8pDIR_Positive, "Positive")
+        choice(xps8pDIR_Negative, "Negative")
+}
+menu(xps8pSET) {
+        choice(xps8pSET_Use,      "Use")
+        choice(xps8pSET_Set,      "Set")
+}
+menu(xps8pSPG) {
+        choice(xps8pSPG_Stop,     "Stop" )
+        choice(xps8pSPG_Pause,    "Pause")
+        choice(xps8pSPG_Go,       "Go"   )
+}
+menu(xps8pBL) {
+        choice(xps8pBL_Disable,   "Disable")
+        choice(xps8pBL_Enable,    "Enable" )
+}
+menu(xps8pHTYP) {
+        choice(xps8pHTYP_MZeroAndIndex,  "MechanicalZeroAndIndexHomeSearch")
+        choice(xps8pHTYP_MZero,          "MechanicalZeroHomeSearch"        )
+        choice(xps8pHTYP_MLimitAndIndex, "MinusEndOfRunAndIndexHomeSearch" )
+        choice(xps8pHTYP_MLimit,         "MinusEndOfRunHomeSearch"         )
+        choice(xps8pHTYP_PLimit,         "PlusEndOfRunHomeSearch"          )
+        choice(xps8pHTYP_Index,          "IndexHomeSearch"                 )
+        choice(xps8pHTYP_CurrentP,       "CurrentPositionAsHome"           )
+}
+
+recordtype(xps8p) {
+	include "dbCommon.dbd" 
+        field(CARD,DBF_SHORT) {
+                prompt("Card Number")
+                special(SPC_NOMOD)
+                interest(1)
+        }
+	field(TYPE,DBF_STRING) {
+		prompt("Type of the Stage")
+		special(SPC_NOMOD)
+		interest(1)
+		size(61)
+	}
+	field(DSTA,DBF_LONG) {
+		prompt("Driver Status")
+		special(SPC_NOMOD)
+		interest(1)
+		initial("-1")
+	}
+	field(DSTR,DBF_NOACCESS) {
+		prompt("Driver Status String")
+		special(SPC_DBADDR)
+		extra("char *dstr")
+		interest(1)
+	}
+	field(HSTA,DBF_LONG) {
+		prompt("Hardware Status")
+		special(SPC_NOMOD)
+		interest(1)
+		initial("-1")
+	}
+	field(HSTR,DBF_NOACCESS) {
+		prompt("Hardware Status String")
+		special(SPC_DBADDR)
+		extra("char *hstr")
+		interest(1)
+	}
+	field(SNUM,DBF_LONG) {
+		prompt("State Number")
+		special(SPC_NOMOD)
+		interest(1)
+		initial("-1")
+	}
+	field(SSTR,DBF_NOACCESS) {
+		prompt("State String")
+		special(SPC_DBADDR)
+		extra("char *sstr")
+		interest(1)
+	}
+	field(ERR,DBF_LONG) {
+		prompt("Error Number")
+		special(SPC_NOMOD)
+		interest(1)
+		initial("999")
+	}
+	field(ESTR,DBF_NOACCESS) {
+		prompt("Error String")
+		special(SPC_DBADDR)
+		extra("char *estr")
+		interest(1)
+	}
+        field(DLVL,DBF_SHORT) {
+                prompt("Debugging Level")
+                promptgroup(GUI_COMMON)
+                interest(1)
+                initial("0")
+        }
+	field(LOGA,DBF_NOACCESS) {
+		prompt("Log Message A")
+		special(SPC_DBADDR)
+		extra("char *loga")
+	}
+	field(LOGB,DBF_NOACCESS) {
+		prompt("Log Message B")
+		special(SPC_DBADDR)
+		extra("char *logb")
+	}
+	field(LOGC,DBF_NOACCESS) {
+		prompt("Log Message C")
+		special(SPC_DBADDR)
+		extra("char *logc")
+	}
+	field(LOGD,DBF_NOACCESS) {
+		prompt("Log Message D")
+		special(SPC_DBADDR)
+		extra("char *logd")
+	}
+	field(LOGE,DBF_NOACCESS) {
+		prompt("Log Message E")
+		special(SPC_DBADDR)
+		extra("char *loge")
+	}
+	field(LOGF,DBF_NOACCESS) {
+		prompt("Log Message F")
+		special(SPC_DBADDR)
+		extra("char *logf")
+	}
+	field(LOGG,DBF_NOACCESS) {
+		prompt("Log Message G")
+		special(SPC_DBADDR)
+		extra("char *logg")
+	}
+	field(LOGH,DBF_NOACCESS) {
+		prompt("Log Message H")
+		special(SPC_DBADDR)
+		extra("char *logh")
+	}
+	field(KILL,DBF_SHORT) {
+		prompt("Reset")
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INIT,DBF_SHORT) {
+		prompt("Initialize")
+		special(SPC_MOD)
+		interest(1)
+	}
+        field(HOME,DBF_SHORT) {
+                prompt("Home Search")
+                special(SPC_MOD)
+                interest(1)
+        }
+        field(REFR,DBF_SHORT) {
+                prompt("Reference to DRBV")
+                special(SPC_MOD)
+                interest(1)
+        }
+        field(REF2,DBF_DOUBLE) {
+                prompt("Reference to Value")
+                special(SPC_MOD)
+                interest(1)
+        }
+        field(DIR,DBF_MENU) {
+                prompt("User Direction")
+                promptgroup(GUI_COMMON)
+                menu(xps8pDIR)
+                special(SPC_MOD)
+                interest(1)
+        }
+        field(OFF,DBF_DOUBLE) {
+                prompt("User Offset (EGU)")
+                special(SPC_MOD)
+                asl(ASL0)
+        }
+        field(SET,DBF_MENU) {
+                prompt("Use/Set Switch")
+                menu(xps8pSET)
+                special(SPC_MOD)
+                interest(1)
+                asl(ASL0)
+        }
+        field(SVEL,DBF_DOUBLE) {
+                prompt("Stage Max Velocity")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+        }
+        field(SACC,DBF_DOUBLE) {
+                prompt("Stage Max Acceleration")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+        }
+        field(VELO,DBF_DOUBLE) {
+                prompt("Velocity (EGU/s)")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                interest(1)
+                initial("0.4")
+        }
+        field(ACCL,DBF_DOUBLE) {
+                prompt("Seconds to Velocity")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                interest(1)
+                initial("1.6")
+        }
+        field(SLJ,DBF_DOUBLE) {
+                prompt("Stage Min Jerk Time")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+        }
+        field(SHJ,DBF_DOUBLE) {
+                prompt("Stage Max Jerk Time")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+        }
+        field(MINJ,DBF_DOUBLE) {
+                prompt("Min Jerk Time (s)")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                interest(1)
+                initial("0.01")
+        }
+        field(MAXJ,DBF_DOUBLE) {
+                prompt("Max Jerk Time (s)")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                interest(1)
+                initial("0.03")
+        }
+        field(BL,DBF_MENU) {
+                prompt("Backlash Dis/Enable")
+                promptgroup(GUI_COMMON)
+                menu(xps8pBL)
+                special(SPC_MOD)
+                interest(1)
+        }
+        field(BDST,DBF_DOUBLE) {
+                prompt("Backlash Distance (EGU)")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                interest(1)
+                asl(ASL0)
+        }
+        field(EGU,DBF_STRING) {
+                prompt("Engineering Units")
+                promptgroup(GUI_COMMON)
+                interest(1)
+                size(16)
+        }
+        field(PREC,DBF_SHORT) {
+                prompt("Display Precision")
+                promptgroup(GUI_COMMON)
+                interest(1)
+                initial("3")
+        }
+        field(UINT,DBF_DOUBLE) {
+                prompt("Update Interval")
+                interest(1)
+                initial("0.2")
+        }
+        field(HLM,DBF_DOUBLE) {
+                prompt("User High Limit")
+                special(SPC_MOD)
+                initial("2.54")
+        }
+        field(LLM,DBF_DOUBLE) {
+                prompt("User Low Limit")
+                special(SPC_MOD)
+                initial("0.0")
+        }
+        field(DHLM,DBF_DOUBLE) {
+                prompt("Dial High Limit")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                initial("2.54")
+        }
+        field(DLLM,DBF_DOUBLE) {
+                prompt("Dial Low Limit")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                initial("0.0")
+        }
+        field(SHLM,DBF_DOUBLE) {
+                prompt("Stage High Limit")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+        }
+        field(SLLM,DBF_DOUBLE) {
+                prompt("Stage Low Limit")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+        }
+        field(LVIO,DBF_SHORT) {
+                prompt("Limit violation")
+                special(SPC_NOMOD)
+                initial("1")
+        }
+        field(HIHI,DBF_DOUBLE) {
+                prompt("Hihi Alarm Limit (EGU)")
+                promptgroup(GUI_COMMON)
+                interest(2)
+                pp(TRUE)
+        }
+        field(HIGH,DBF_DOUBLE) {
+                prompt("High Alarm Limit (EGU)")
+                promptgroup(GUI_COMMON)
+                interest(2)
+                pp(TRUE)
+        }
+        field(LOW,DBF_DOUBLE) {
+                prompt("Low Alarm Limit (EGU)")
+                promptgroup(GUI_COMMON)
+                interest(2)
+                pp(TRUE)
+        }
+        field(LOLO,DBF_DOUBLE) {
+                prompt("Lolo Alarm Limit (EGU)")
+                promptgroup(GUI_COMMON)
+                interest(2)
+                pp(TRUE)
+        }
+        field(HHSV,DBF_MENU) {
+                prompt("Hihi Severity")
+                promptgroup(GUI_COMMON)
+                menu(menuAlarmSevr)
+                interest(2)
+                pp(TRUE)
+        }
+        field(HSV,DBF_MENU) {
+                prompt("High Severity")
+                promptgroup(GUI_COMMON)
+                menu(menuAlarmSevr)
+                interest(2)
+                pp(TRUE)
+        }
+        field(LSV,DBF_MENU) {
+                prompt("Low Severity")
+                promptgroup(GUI_COMMON)
+                menu(menuAlarmSevr)
+                interest(2)
+                pp(TRUE)
+        }
+        field(LLSV,DBF_MENU) {
+                prompt("Lolo Severity")
+                promptgroup(GUI_COMMON)
+                menu(menuAlarmSevr)
+                interest(2)
+                pp(TRUE)
+        }
+        field(HLSV,DBF_MENU) {
+                prompt("HW Limit Violation Svr")
+                promptgroup(GUI_COMMON)
+                menu(menuAlarmSevr)
+                interest(2)
+                pp(TRUE)
+        }
+        field(HLS,DBF_SHORT) {
+                prompt("High Limit Switch")
+                special(SPC_NOMOD)
+        }
+        field(LLS,DBF_SHORT) {
+                prompt("Low Limit Switch")
+                special(SPC_NOMOD)
+        }
+        field(RDBD,DBF_DOUBLE) {
+                prompt("Retry Deadband (EGU)")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                initial("0.001")
+                interest(1)
+        }
+        field(RTRY,DBF_SHORT) {
+                prompt("Max Retry")
+                promptgroup(GUI_COMMON)
+                initial("3")
+                interest(1)
+        }
+        field(RCNT,DBF_SHORT) {
+                prompt("Retry Count")
+                special(SPC_NOMOD)
+                interest(2)
+        }
+        field(MISS,DBF_SHORT) {
+                prompt("Ran Out of Retries")
+                special(SPC_NOMOD)
+                interest(2)
+        }
+        field(SPG,DBF_MENU) {
+                prompt("Stop/Pause/Go")
+                menu(xps8pSPG)
+                special(SPC_MOD)
+                interest(1)
+                asl(ASL0)
+                initial("2")
+        }
+        field(TWF,DBF_SHORT) {
+                prompt("Tweak Forward")
+                special(SPC_MOD)
+                interest(1)
+                asl(ASL0)
+        }
+        field(TWR,DBF_SHORT) {
+                prompt("Tweak Reverse")
+                special(SPC_MOD)
+                interest(1)
+                asl(ASL0)
+        }
+        field(TWV,DBF_DOUBLE) {
+                prompt("Tweak Step Size (EGU)")
+                promptgroup(GUI_COMMON)
+                interest(1)
+                asl(ASL0)
+                initial("0.5")
+        }
+        field(VAL,DBF_DOUBLE) {
+                prompt("User Desired Value (EGU)")
+                special(SPC_MOD)
+                asl(ASL0)
+        }
+        field(DVAL,DBF_DOUBLE) {
+                prompt("Dial Desired Value (EGU)")
+                special(SPC_MOD)
+                asl(ASL0)
+        }
+        field(DRBV,DBF_DOUBLE) {
+                prompt("Dial Readback Value")
+                special(SPC_NOMOD)
+        }
+        field(RBV,DBF_DOUBLE) {
+                prompt("User Readback Value")
+                special(SPC_NOMOD)
+        }
+        field(DIFF,DBF_DOUBLE) {
+                prompt("Difference rbv-val")
+                special(SPC_NOMOD)
+        }
+        field(MOVN,DBF_SHORT) {
+                prompt("Motor Is Moving")
+                special(SPC_NOMOD)
+        }
+        field(MIP,DBF_USHORT) {
+                prompt("Motion In Progress")
+                special(SPC_NOMOD)
+                interest(3)
+        }
+        field(DMOV,DBF_SHORT) {
+                prompt("Done Moving to Value")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+                initial("1")
+        }
+        field(MSTA,DBF_ULONG) {
+                prompt("Motor Status")
+                special(SPC_NOMOD)
+                interest(3)
+        }
+        field(STUP,DBF_SHORT) {
+                prompt("Force Status Update")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                interest(1)
+                asl(ASL0)
+        }
+        field(ADEL,DBF_DOUBLE) {
+                prompt("Archive Deadband")
+                promptgroup(GUI_COMMON)
+                interest(1)
+        }
+        field(MDEL,DBF_DOUBLE) {
+                prompt("Monitor Deadband")
+                promptgroup(GUI_COMMON)
+                interest(1)
+        }
+        field(ALST,DBF_DOUBLE) {
+                prompt("Last Value Archived")
+                special(SPC_NOMOD)
+                interest(3)
+        }
+        field(MLST,DBF_DOUBLE) {
+                prompt("Last Val Monitored")
+                special(SPC_NOMOD)
+                interest(3)
+        }
+        field(PDBD,DBF_DOUBLE) {
+                prompt("Position Tolerance")
+                interest(1)
+                initial("0.01")
+        }
+        field(HTYP,DBF_MENU) {
+                prompt("Home Search Type")
+                special(SPC_MOD)
+                menu(xps8pHTYP)
+                interest(1)
+        }
+        field(HSET,DBF_DOUBLE) {
+                prompt("Home Preset")
+                special(SPC_MOD)
+                interest(1)
+        }
+        field(SHVE,DBF_DOUBLE) {
+                prompt("Stage Max Homing Vel")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+        }
+        field(SHAC,DBF_DOUBLE) {
+                prompt("Stage Max Homing Acc")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+        }
+        field(HVEL,DBF_DOUBLE) {
+                prompt("Homing V (EGU/s)")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                interest(1)
+		initial("0.4")
+        }
+        field(HACC,DBF_DOUBLE) {
+                prompt("Homing Seconds to V")
+                promptgroup(GUI_COMMON)
+                special(SPC_MOD)
+                interest(1)
+                initial("1.6")
+        }
+        field(RCON,DBF_SHORT) {
+                prompt("Re-connect")
+                special(SPC_MOD)
+                interest(1)
+        }
+        field(OVAL,DBF_DOUBLE) {
+                prompt("Original Value")
+                promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
+        }
+        field(CMAP,DBF_ULONG) {
+                prompt("Bit Map of Changed Fields")
+                special(SPC_NOMOD)
+                initial("0")
+        }
+        field(BUTC,DBF_SHORT) {
+                prompt("Class of Buttons to Show")
+                special(SPC_NOMOD)
+                interest(1)
+                initial("-1")
+        }
+}
+

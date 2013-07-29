@@ -1,0 +1,42 @@
+record(longout, "$(DEVICE)_3340:UpdateMultiplier") {
+  field(DESC, "Update Multiplier")
+  field(VAL,  "$(multiplier)")
+}
+
+record(calcout, "$(DEVICE)_3340:UpdateClock") {
+  field(DESC, "Update Clock")
+  field(INPA, "$(DEVICE)_3340:UpdateClock")
+  field(INPB, "$(DEVICE)_3340:UpdateMultiplier NPP")
+  field(OUT,  "$(DEVICE)_3340:UpdateToggle.PROC")
+  field(CALC, "(A+1)%B")
+  field(OCAL, "1")
+  field(OOPT, "When Zero")
+  field(DOPT, "Use OCAL")
+  field(SCAN, "$(basePeriod)")
+}
+
+record(calc, "$(DEVICE)_3340:UpdateToggle") {
+  field(DESC, "Update Toggle")
+  field(INPA, "$(DEVICE)_3340:UpdateToggle")
+  field(CALC, "1-A")
+  field(FLNK, "$(DEVICE)_3340:UpdateEvtSeq")
+  field(SCAN, "Passive")
+}
+
+record(calcout, "$(DEVICE)_3340:UpdateEvtSeq") {
+  field(DESC, "Update Event Sequencer")
+  field(INPA, "$(DEVICE)_3340:UpdateEvtSeq")
+  field(INPB, "$(DEVICE)_3340:UpdateToggle")
+  field(OUT,  "$(DEVICE)_3340:UpdateEvtGen.VAL PP")
+  field(CALC, "A%16+1")
+  field(OCAL, "MIN(FLOOR((A%16+2.1)/2)+B*9,9)")
+  field(DOPT, "Use OCAL")
+  field(OOPT, "Every Time")
+  field(SCAN, "Passive")
+}
+
+record(event, "$(DEVICE)_3340:UpdateEvtGen") {
+  field(DESC, "Update Event Generator")
+  field(SCAN, "Passive")
+}
+

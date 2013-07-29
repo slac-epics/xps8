@@ -1,0 +1,510 @@
+record(xps8, "$(DEVICE)_1724") {
+  field(CTRL, "$(CTRL)")
+  field(PORT, "$(PORT)")
+  field(SCAN, "Event" )
+  field(EVNT, "9" )
+  field(FLNK, "$(DEVICE)_1724:TS")
+}
+
+record(stringin, "$(DEVICE)_1724:TS") {
+  field(DESC, "Time Stamp of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE)_1724.TIME")
+  field(INP,  "@%b %d %R:%S %Y")
+  field(FLNK, "$(DEVICE)_1724:UTCS")
+}
+
+record(stringin, "$(DEVICE)_1724:UTCS") {
+  field(DESC, "UTC String of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE)_1724.TIME")
+  field(INP,  "@%s")
+  field(FLNK, "$(DEVICE)_1724:UTC")
+}
+
+record(scalcout, "$(DEVICE)_1724:UTC") {
+  field(DESC, "UTC Seconds of Last Update")
+  field(INAA, "$(DEVICE)_1724:UTCS")
+  field(CALC, "INT(AA)")
+}
+
+record(xps8p, "$(DEVICE):17") {
+  field(CARD, "0")
+  field(FLNK, "$(DEVICE):17:TS")
+}
+
+record(stringin, "$(DEVICE):17:TS") {
+  field(DESC, "Time Stamp of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):17.TIME")
+  field(INP,  "@%b %d %R:%S %Y")
+  field(FLNK, "$(DEVICE):17:UTCS")
+}
+
+record(stringin, "$(DEVICE):17:UTCS") {
+  field(DESC, "UTC String of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):17.TIME")
+  field(INP,  "@%s")
+  field(FLNK, "$(DEVICE):17:UTC")
+}
+
+record(scalcout, "$(DEVICE):17:UTC") {
+  field(DESC, "UTC Seconds of Last Update")
+  field(INAA, "$(DEVICE):17:UTCS")
+  field(CALC, "INT(AA)")
+}
+
+record(xps8p, "$(DEVICE):18") {
+  field(CARD, "1")
+  field(FLNK, "$(DEVICE):18:TS")
+}
+
+record(stringin, "$(DEVICE):18:TS") {
+  field(DESC, "Time Stamp of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):18.TIME")
+  field(INP,  "@%b %d %R:%S %Y")
+  field(FLNK, "$(DEVICE):18:UTCS")
+}
+
+record(stringin, "$(DEVICE):18:UTCS") {
+  field(DESC, "UTC String of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):18.TIME")
+  field(INP,  "@%s")
+  field(FLNK, "$(DEVICE):18:UTC")
+}
+
+record(scalcout, "$(DEVICE):18:UTC") {
+  field(DESC, "UTC Seconds of Last Update")
+  field(INAA, "$(DEVICE):18:UTCS")
+  field(CALC, "INT(AA)")
+}
+
+record(xps8p, "$(DEVICE):19") {
+  field(CARD, "2")
+  field(FLNK, "$(DEVICE):19:TS")
+}
+
+record(stringin, "$(DEVICE):19:TS") {
+  field(DESC, "Time Stamp of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):19.TIME")
+  field(INP,  "@%b %d %R:%S %Y")
+  field(FLNK, "$(DEVICE):19:UTCS")
+}
+
+record(stringin, "$(DEVICE):19:UTCS") {
+  field(DESC, "UTC String of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):19.TIME")
+  field(INP,  "@%s")
+  field(FLNK, "$(DEVICE):19:UTC")
+}
+
+record(scalcout, "$(DEVICE):19:UTC") {
+  field(DESC, "UTC Seconds of Last Update")
+  field(INAA, "$(DEVICE):19:UTCS")
+  field(CALC, "INT(AA)")
+}
+
+record(xps8p, "$(DEVICE):20") {
+  field(CARD, "3")
+  field(FLNK, "$(DEVICE):20:TS")
+}
+
+record(stringin, "$(DEVICE):20:TS") {
+  field(DESC, "Time Stamp of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):20.TIME")
+  field(INP,  "@%b %d %R:%S %Y")
+  field(FLNK, "$(DEVICE):20:UTCS")
+}
+
+record(stringin, "$(DEVICE):20:UTCS") {
+  field(DESC, "UTC String of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):20.TIME")
+  field(INP,  "@%s")
+  field(FLNK, "$(DEVICE):20:UTC")
+}
+
+record(scalcout, "$(DEVICE):20:UTC") {
+  field(DESC, "UTC Seconds of Last Update")
+  field(INAA, "$(DEVICE):20:UTCS")
+  field(CALC, "INT(AA)")
+}
+
+record(xps8p, "$(DEVICE):21") {
+  field(CARD, "4")
+  field(FLNK, "$(DEVICE):21:TS")
+}
+
+record(stringin, "$(DEVICE):21:TS") {
+  field(DESC, "Time Stamp of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):21.TIME")
+  field(INP,  "@%b %d %R:%S %Y")
+  field(FLNK, "$(DEVICE):21:UTCS")
+}
+
+record(stringin, "$(DEVICE):21:UTCS") {
+  field(DESC, "UTC String of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):21.TIME")
+  field(INP,  "@%s")
+  field(FLNK, "$(DEVICE):21:UTC")
+}
+
+record(scalcout, "$(DEVICE):21:UTC") {
+  field(DESC, "UTC Seconds of Last Update")
+  field(INAA, "$(DEVICE):21:UTCS")
+  field(CALC, "INT(AA)")
+}
+
+record(xps8p, "$(DEVICE):22") {
+  field(CARD, "5")
+  field(FLNK, "$(DEVICE):22:TS")
+}
+
+record(stringin, "$(DEVICE):22:TS") {
+  field(DESC, "Time Stamp of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):22.TIME")
+  field(INP,  "@%b %d %R:%S %Y")
+  field(FLNK, "$(DEVICE):22:UTCS")
+}
+
+record(stringin, "$(DEVICE):22:UTCS") {
+  field(DESC, "UTC String of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):22.TIME")
+  field(INP,  "@%s")
+  field(FLNK, "$(DEVICE):22:UTC")
+}
+
+record(scalcout, "$(DEVICE):22:UTC") {
+  field(DESC, "UTC Seconds of Last Update")
+  field(INAA, "$(DEVICE):22:UTCS")
+  field(CALC, "INT(AA)")
+}
+
+record(xps8p, "$(DEVICE):23") {
+  field(CARD, "6")
+  field(FLNK, "$(DEVICE):23:TS")
+}
+
+record(stringin, "$(DEVICE):23:TS") {
+  field(DESC, "Time Stamp of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):23.TIME")
+  field(INP,  "@%b %d %R:%S %Y")
+  field(FLNK, "$(DEVICE):23:UTCS")
+}
+
+record(stringin, "$(DEVICE):23:UTCS") {
+  field(DESC, "UTC String of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):23.TIME")
+  field(INP,  "@%s")
+  field(FLNK, "$(DEVICE):23:UTC")
+}
+
+record(scalcout, "$(DEVICE):23:UTC") {
+  field(DESC, "UTC Seconds of Last Update")
+  field(INAA, "$(DEVICE):23:UTCS")
+  field(CALC, "INT(AA)")
+}
+
+record(xps8p, "$(DEVICE):24") {
+  field(CARD, "7")
+  field(FLNK, "$(DEVICE):24:TS")
+}
+
+record(stringin, "$(DEVICE):24:TS") {
+  field(DESC, "Time Stamp of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):24.TIME")
+  field(INP,  "@%b %d %R:%S %Y")
+  field(FLNK, "$(DEVICE):24:UTCS")
+}
+
+record(stringin, "$(DEVICE):24:UTCS") {
+  field(DESC, "UTC String of Last Update")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "$(DEVICE):24.TIME")
+  field(INP,  "@%s")
+  field(FLNK, "$(DEVICE):24:UTC")
+}
+
+record(scalcout, "$(DEVICE):24:UTC") {
+  field(DESC, "UTC Seconds of Last Update")
+  field(INAA, "$(DEVICE):24:UTCS")
+  field(CALC, "INT(AA)")
+}
+
+record(calcout, "$(DEVICE):17:Update") {
+  field(INPA, "$(DEVICE):17.DMOV NPP")
+  field(OUT,  "$(DEVICE):17.STUP")
+  field(CALC, "A")
+  field(OOPT, "When Non-zero")
+  field(DOPT, "Use CALC")
+  field(SCAN, "Event")
+  field(EVNT, "1")
+}
+
+record(calcout, "$(DEVICE):18:Update") {
+  field(INPA, "$(DEVICE):18.DMOV NPP")
+  field(OUT,  "$(DEVICE):18.STUP")
+  field(CALC, "A")
+  field(OOPT, "When Non-zero")
+  field(DOPT, "Use CALC")
+  field(SCAN, "Event")
+  field(EVNT, "2")
+}
+
+record(calcout, "$(DEVICE):19:Update") {
+  field(INPA, "$(DEVICE):19.DMOV NPP")
+  field(OUT,  "$(DEVICE):19.STUP")
+  field(CALC, "A")
+  field(OOPT, "When Non-zero")
+  field(DOPT, "Use CALC")
+  field(SCAN, "Event")
+  field(EVNT, "3")
+}
+
+record(calcout, "$(DEVICE):20:Update") {
+  field(INPA, "$(DEVICE):20.DMOV NPP")
+  field(OUT,  "$(DEVICE):20.STUP")
+  field(CALC, "A")
+  field(OOPT, "When Non-zero")
+  field(DOPT, "Use CALC")
+  field(SCAN, "Event")
+  field(EVNT, "4")
+}
+
+record(calcout, "$(DEVICE):21:Update") {
+  field(INPA, "$(DEVICE):21.DMOV NPP")
+  field(OUT,  "$(DEVICE):21.STUP")
+  field(CALC, "A")
+  field(OOPT, "When Non-zero")
+  field(DOPT, "Use CALC")
+  field(SCAN, "Event")
+  field(EVNT, "5")
+}
+
+record(calcout, "$(DEVICE):22:Update") {
+  field(INPA, "$(DEVICE):22.DMOV NPP")
+  field(OUT,  "$(DEVICE):22.STUP")
+  field(CALC, "A")
+  field(OOPT, "When Non-zero")
+  field(DOPT, "Use CALC")
+  field(SCAN, "Event")
+  field(EVNT, "6")
+}
+
+record(calcout, "$(DEVICE):23:Update") {
+  field(INPA, "$(DEVICE):23.DMOV NPP")
+  field(OUT,  "$(DEVICE):23.STUP")
+  field(CALC, "A")
+  field(OOPT, "When Non-zero")
+  field(DOPT, "Use CALC")
+  field(SCAN, "Event")
+  field(EVNT, "7")
+}
+
+record(calcout, "$(DEVICE):24:Update") {
+  field(INPA, "$(DEVICE):24.DMOV NPP")
+  field(OUT,  "$(DEVICE):24.STUP")
+  field(CALC, "A")
+  field(OOPT, "When Non-zero")
+  field(DOPT, "Use CALC")
+  field(SCAN, "Event")
+  field(EVNT, "8")
+}
+
+record(calcout, "$(DEVICE)_1724:STUP") {
+  field(DESC, "Status Update Watcher")
+  field(INPA, "$(DEVICE)_1724.STUP CPP")
+  field(INPB, "$(DEVICE)_1724:UpdateClock.SCAN NPP")
+  field(OUT,  "$(DEVICE)_1724:STUP_Seq.PROC")
+  field(CALC, "A")
+  field(OCAL, "1")
+  field(OOPT, "On Change")
+  field(DOPT, "Use OCAL")
+}
+
+record(seq, "$(DEVICE)_1724:STUP_Seq") {
+  field(DESC, "Status Update Sequencer")
+  field(SELM, "All")
+  field(LNK1, "$(DEVICE)_1724:UpdateClock.SCAN")
+  field(DO1,  "0")
+  field(DLY1, "0")
+  field(LNK2, "$(DEVICE)_1724:UpdateEvtGen.VAL PP")
+  field(DO2,  "1")
+  field(DLY2, "1")
+  field(LNK3, "$(DEVICE)_1724:UpdateEvtGen.VAL PP")
+  field(DO3,  "2")
+  field(DLY3, "2")
+  field(LNK4, "$(DEVICE)_1724:UpdateEvtGen.VAL PP")
+  field(DO4,  "3")
+  field(DLY4, "2")
+  field(LNK5, "$(DEVICE)_1724:UpdateEvtGen.VAL PP")
+  field(DO5,  "4")
+  field(DLY5, "2")
+  field(LNK6, "$(DEVICE)_1724:UpdateEvtGen.VAL PP")
+  field(DO6,  "5")
+  field(DLY6, "2")
+  field(LNK7, "$(DEVICE)_1724:UpdateEvtGen.VAL PP")
+  field(DO7,  "6")
+  field(DLY7, "2")
+  field(LNK8, "$(DEVICE)_1724:UpdateEvtGen.VAL PP")
+  field(DO8,  "7")
+  field(DLY8, "2")
+  field(LNK9, "$(DEVICE)_1724:UpdateEvtGen.VAL PP")
+  field(DO9,  "8")
+  field(DLY9, "2")
+  field(LNKA, "$(DEVICE)_1724:UpdateClock.SCAN")
+  field(DOLA, "$(DEVICE)_1724:STUP.B")
+  field(DLYA, "5")
+}
+
+record(calcout, "$(DEVICE)_1724:RCON") {
+  field(DESC, "Re-connect Watcher")
+  field(INPA, "$(DEVICE)_1724.OCON CPP")
+  field(INPB, "$(DEVICE)_1724:UpdateClock.SCAN NPP")
+  field(OUT,  "$(DEVICE)_1724:RCON_Seq.PROC")
+  field(CALC, "A")
+  field(OCAL, "1")
+  field(OOPT, "On Change")
+  field(DOPT, "Use OCAL")
+}
+
+record(seq, "$(DEVICE)_1724:RCON_Seq") {
+  field(DESC, "Re-connect Sequencer")
+  field(SELM, "All")
+  field(LNK1, "$(DEVICE)_1724:UpdateClock.SCAN")
+  field(DO1,  "0")
+  field(DLY1, "0")
+  field(LNK2, "$(DEVICE):17.RCON")
+  field(DO2,  "1")
+  field(DLY2, "1")
+  field(LNK3, "$(DEVICE):18.RCON")
+  field(DO3,  "1")
+  field(DLY3, "2")
+  field(LNK4, "$(DEVICE):19.RCON")
+  field(DO4,  "1")
+  field(DLY4, "2")
+  field(LNK5, "$(DEVICE):20.RCON")
+  field(DO5,  "1")
+  field(DLY5, "2")
+  field(LNK6, "$(DEVICE):21.RCON")
+  field(DO6,  "1")
+  field(DLY6, "2")
+  field(LNK7, "$(DEVICE):22.RCON")
+  field(DO7,  "1")
+  field(DLY7, "2")
+  field(LNK8, "$(DEVICE):23.RCON")
+  field(DO8,  "1")
+  field(DLY8, "2")
+  field(LNK9, "$(DEVICE):24.RCON")
+  field(DO9,  "1")
+  field(DLY9, "2")
+  field(LNKA, "$(DEVICE)_1724:UpdateClock.SCAN")
+  field(DOLA, "$(DEVICE)_1724:RCON.B")
+  field(DLYA, "5")
+}
+
+record(calcout, "$(DEVICE)_1724:IALL") {
+  field(DESC, "Initialize-All Watcher")
+  field(INPA, "$(DEVICE)_1724.OINI CPP")
+  field(INPB, "$(DEVICE)_1724:UpdateClock.SCAN NPP")
+  field(OUT,  "$(DEVICE)_1724:IALL_Seq.PROC")
+  field(CALC, "A")
+  field(OCAL, "1")
+  field(OOPT, "On Change")
+  field(DOPT, "Use OCAL")
+}
+
+record(seq, "$(DEVICE)_1724:IALL_Seq") {
+  field(DESC, "Initialize-All Sequencer")
+  field(SELM, "All")
+  field(LNK1, "$(DEVICE)_1724:UpdateClock.SCAN")
+  field(DO1,  "0")
+  field(DLY1, "0")
+  field(LNK2, "$(DEVICE):17.INIT")
+  field(DO2,  "1")
+  field(DLY2, "1")
+  field(LNK3, "$(DEVICE):18.INIT")
+  field(DO3,  "1")
+  field(DLY3, "1")
+  field(LNK4, "$(DEVICE):19.INIT")
+  field(DO4,  "1")
+  field(DLY4, "1")
+  field(LNK5, "$(DEVICE):20.INIT")
+  field(DO5,  "1")
+  field(DLY5, "1")
+  field(LNK6, "$(DEVICE):21.INIT")
+  field(DO6,  "1")
+  field(DLY6, "1")
+  field(LNK7, "$(DEVICE):22.INIT")
+  field(DO7,  "1")
+  field(DLY7, "1")
+  field(LNK8, "$(DEVICE):23.INIT")
+  field(DO8,  "1")
+  field(DLY8, "1")
+  field(LNK9, "$(DEVICE):24.INIT")
+  field(DO9,  "1")
+  field(DLY9, "1")
+  field(LNKA, "$(DEVICE)_1724:UpdateClock.SCAN")
+  field(DOLA, "$(DEVICE)_1724:IALL.B")
+  field(DLYA, "5")
+}
+
+record(calcout, "$(DEVICE)_1724:RALL") {
+  field(DESC, "Reference-All Watcher")
+  field(INPA, "$(DEVICE)_1724.OREF CPP")
+  field(INPB, "$(DEVICE)_1724:UpdateClock.SCAN NPP")
+  field(OUT,  "$(DEVICE)_1724:RALL_Seq.PROC")
+  field(CALC, "A")
+  field(OCAL, "1")
+  field(OOPT, "On Change")
+  field(DOPT, "Use OCAL")
+}
+
+record(seq, "$(DEVICE)_1724:RALL_Seq") {
+  field(DESC, "Reference-All Sequencer")
+  field(SELM, "All")
+  field(LNK1, "$(DEVICE)_1724:UpdateClock.SCAN")
+  field(DO1,  "0")
+  field(DLY1, "0")
+  field(LNK2, "$(DEVICE):17.REFR")
+  field(DO2,  "1")
+  field(DLY2, "1")
+  field(LNK3, "$(DEVICE):18.REFR")
+  field(DO3,  "1")
+  field(DLY3, "1")
+  field(LNK4, "$(DEVICE):19.REFR")
+  field(DO4,  "1")
+  field(DLY4, "1")
+  field(LNK5, "$(DEVICE):20.REFR")
+  field(DO5,  "1")
+  field(DLY5, "1")
+  field(LNK6, "$(DEVICE):21.REFR")
+  field(DO6,  "1")
+  field(DLY6, "1")
+  field(LNK7, "$(DEVICE):22.REFR")
+  field(DO7,  "1")
+  field(DLY7, "1")
+  field(LNK8, "$(DEVICE):23.REFR")
+  field(DO8,  "1")
+  field(DLY8, "1")
+  field(LNK9, "$(DEVICE):24.REFR")
+  field(DO9,  "1")
+  field(DLY9, "1")
+  field(LNKA, "$(DEVICE)_1724:UpdateClock.SCAN")
+  field(DOLA, "$(DEVICE)_1724:RALL.B")
+  field(DLYA, "5")
+}
+

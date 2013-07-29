@@ -1,0 +1,151 @@
+recordtype(xps8) {
+	include "dbCommon.dbd" 
+	field(VERS,DBF_FLOAT) {
+		prompt("Code Version")
+		special(SPC_NOMOD)
+		interest(1)
+		initial("1.0")
+	}
+	field(VAL,DBF_SHORT) {
+		prompt("Dummy")
+	}
+	field(INP,DBF_INLINK) {
+		prompt("Input Specification")
+	}
+	field(CTRL,DBF_STRING) {
+		prompt("Name of the Controller")
+		special(SPC_NOMOD)
+		interest(1)
+		size(61)
+	}
+	field(PORT,DBF_SHORT) {
+		prompt("Port Number")
+		special(SPC_NOMOD)
+		interest(1)
+		initial(5001)
+	}
+	field(SERR,DBF_NOACCESS) {
+		prompt("Socket Error")
+		special(SPC_DBADDR)
+		extra("char *serr")
+		interest(1)
+	}
+	field(FVER,DBF_NOACCESS) {
+		prompt("Firmware Version")
+		special(SPC_DBADDR)
+		extra("char *fver")
+		interest(1)
+	}
+	field(SNUM,DBF_LONG) {
+		prompt("Status Number")
+		special(SPC_NOMOD)
+		interest(1)
+		initial("-1")
+	}
+	field(SSTR,DBF_NOACCESS) {
+		prompt("Status String")
+		special(SPC_DBADDR)
+		extra("char *sstr")
+		interest(1)
+	}
+	field(LOGA,DBF_NOACCESS) {
+		prompt("Log Message A")
+		special(SPC_DBADDR)
+		extra("char *loga")
+	}
+	field(LOGB,DBF_NOACCESS) {
+		prompt("Log Message B")
+		special(SPC_DBADDR)
+		extra("char *logb")
+	}
+	field(LOGC,DBF_NOACCESS) {
+		prompt("Log Message C")
+		special(SPC_DBADDR)
+		extra("char *logc")
+	}
+	field(LOGD,DBF_NOACCESS) {
+		prompt("Log Message D")
+		special(SPC_DBADDR)
+		extra("char *logd")
+	}
+	field(LOGE,DBF_NOACCESS) {
+		prompt("Log Message E")
+		special(SPC_DBADDR)
+		extra("char *loge")
+	}
+	field(LOGF,DBF_NOACCESS) {
+		prompt("Log Message F")
+		special(SPC_DBADDR)
+		extra("char *logf")
+	}
+	field(LOGG,DBF_NOACCESS) {
+		prompt("Log Message G")
+		special(SPC_DBADDR)
+		extra("char *logg")
+	}
+	field(LOGH,DBF_NOACCESS) {
+		prompt("Log Message H")
+		special(SPC_DBADDR)
+		extra("char *logh")
+	}
+	field(AMAP,DBF_SHORT) {
+		prompt("Bit Map of Active Channels")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(STUP,DBF_SHORT) {
+		prompt("Status Update")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(RBUT,DBF_SHORT) {
+		prompt("Reboot the Controller")
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(RCON,DBF_SHORT) {
+		prompt("Re-connect")
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OCON,DBF_SHORT) {
+		prompt("Connect Toggle")
+		special(SPC_NOMOD)
+		interest(1)
+		initial(0)
+	}
+	field(KALL,DBF_SHORT) {
+		prompt("Kill All")
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(IALL,DBF_SHORT) {
+		prompt("Initialize All")
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OINI,DBF_SHORT) {
+		prompt("Initialize Toggle")
+		special(SPC_NOMOD)
+		interest(1)
+		initial(0)
+	}
+	field(RALL,DBF_SHORT) {
+		prompt("Reference All")
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OREF,DBF_SHORT) {
+		prompt("Reference Toggle")
+		special(SPC_NOMOD)
+		interest(1)
+		initial(0)
+	}
+	field(CMAP,DBF_ULONG) {
+		prompt("Bit Map of Changed Fields")
+		special(SPC_NOMOD)
+		interest(1)
+		initial(0)
+	}
+}
+
