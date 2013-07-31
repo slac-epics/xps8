@@ -1095,7 +1095,7 @@ static long special( dbAddr *pDbAddr, int after )
             }
             else                      // action not allowed, restore old setting
             {
-                prec->set  = prec->oval;
+                prec->set	= static_cast<epicsEnum16>(prec->oval);
                 db_post_events( prec, &prec->set,  DBE_VAL_LOG );
 
                 prec->err  = 999;
@@ -1118,7 +1118,7 @@ static long special( dbAddr *pDbAddr, int after )
             }
             else                      // action not allowed, restore old setting
             {
-                prec->bl   = prec->oval;
+                prec->bl	= static_cast<epicsEnum16>(prec->oval);
                 db_post_events( prec, &prec->bl,   DBE_VAL_LOG );
 
                 prec->err  = 999;
@@ -1297,7 +1297,6 @@ static long cvt_dbaddr( dbAddr *pDbAddr )
 
 static long get_precision( dbAddr *pDbAddr, long *precision )
 {
-    xps8pRecord *prec = (xps8pRecord *)pDbAddr->precord;
     int          fieldIndex = dbGetFieldIndex( pDbAddr );
 
     switch ( fieldIndex )

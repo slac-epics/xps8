@@ -752,7 +752,8 @@ static long log_msg( xps8Record *prec, int dlvl, const char *fmt, ... )
 static void create_request( xps8Record *prec, char const *type )
 {
     char *ioc, *ioc_data, fname[256], tline[80], rline[80], *cp;
-    FILE *tpl, *req;
+    FILE *tpl	= NULL;
+	FILE *req	= NULL;
 
     ioc = getenv( "LINUX_NAME" );
     if      ( strcmp(type, "autosave") == 0 )
@@ -768,9 +769,13 @@ static void create_request( xps8Record *prec, char const *type )
 
         strcat( fname, asTemplateName );
         tpl = fopen( fname, "r" );
+		if ( tpl == NULL )
+			printf( "Error opening autosave template file: %s\n", fname );
 
         sprintf( fname, "%s/%s_autosave.req", saveRestoreFilePath, ioc );
         req = fopen( fname, "w+" );
+		if ( req == NULL )
+			printf( "Error opening autosave req file: %s\n", fname );
     }
     else if ( strcmp(type, "archive" ) == 0 )
     {
@@ -781,34 +786,43 @@ static void create_request( xps8Record *prec, char const *type )
         sprintf( fname, "%s/archive/XPS8_%s_archive.template",
                         getenv("TOP"), prec->name+(strlen(prec->name)-4) );
         tpl = fopen( fname, "r"  );
+		if ( tpl == NULL )
+			printf( "Error opening archive template file: %s\n", fname );
 
         sprintf( fname, "%s/%s/archive/%s.archive", ioc_data, ioc, ioc );
         req = fopen( fname, "w+" );
+		if ( req == NULL )
+			printf( "Error opening archive req file: %s\n", fname );
     }
 
-    while ( 1 )
-    {
-        fgets( tline, 80, tpl );
-        if ( ferror(tpl) || feof(tpl) ) break;
+	if ( req != NULL && tpl != NULL )
+	{
+		while ( 1 )
+		{
+			fgets( tline, 80, tpl );
+			if ( ferror(tpl) || feof(tpl) ) break;
 
-        cp = tline;
-        while ( ( strncmp(cp, "\n", 1) != 0                                ) &&
-                ((strncmp(cp, "\0", 1) == 0) || (strncmp(cp, "\t", 1) == 0))   )
-            cp++;
+			cp = tline;
+			while ( ( strncmp(cp, "\n", 1) != 0                                ) &&
+					((strncmp(cp, "\0", 1) == 0) || (strncmp(cp, "\t", 1) == 0))   )
+				cp++;
 
-        if ( (strncmp(cp, "\n", 1) != 0) && (strncmp(cp, "#", 1) != 0) )
-        {
-            memset( rline, 0, 80                            );
-            memcpy( rline, prec->name, strlen(prec->name)-5 );
-            strcat( rline, tline                            );
-            fputs( rline, req );
-        }
-        else
-            fputs( tline, req );
-    }
+			if ( (strncmp(cp, "\n", 1) != 0) && (strncmp(cp, "#", 1) != 0) )
+			{
+				memset( rline, 0, 80                            );
+				memcpy( rline, prec->name, strlen(prec->name)-5 );
+				strcat( rline, tline                            );
+				fputs( rline, req );
+			}
+			else
+				fputs( tline, req );
+		}
+	}
 
-    fclose( tpl );
-    fclose( req );
+	if ( tpl )
+    	fclose( tpl );
+	if ( req )
+    	fclose( req );
 
     return;
 }
