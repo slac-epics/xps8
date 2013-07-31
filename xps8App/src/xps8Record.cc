@@ -92,23 +92,17 @@ int xps8Debug = 0;
 extern "C" { epicsExportAddress( int, xps8Debug ); }
 
 
-extern char saveRestoreFilePath[];                      // path to restore files
-extern FILE *fopen_and_check( const char *fname, long *status );
-extern "C" long scalar_restore( int pass, DBENTRY *pdbentry, char *PVname,
-                                char *value_str );
-
-extern "C" int create_monitor_set( char *fname, int period, char *macro );
-
 static long init_ctrl     ( void *precord                                    );
 static long log_msg       ( xps8Record *prec, int dlvl, const char *fmt, ... );
 static void post_fields   ( xps8Record *prec, unsigned short all             );
 static void post_msgs     ( xps8Record *prec                                 );
 
-static void create_request( xps8Record *precord,  char const *type           );
-static void restore_fields( xps8Record *precord                              );
-
+extern char saveRestoreFilePath[];                      // path to restore files
 extern char asTemplatePath[];
 extern char asTemplateName[];
+
+static void create_request( xps8Record *precord,  char const *type           );
+
 
 using namespace std;
 
@@ -117,22 +111,10 @@ using namespace std;
 static long init_record( dbCommon *precord, int pass )
 {
     xps8Record *prec = (xps8Record *)precord;
-    char        fname[256];
 
     long        status = 0;
 
-    if ( pass == 1 )
-    {
-        if ( saveRestoreFilePath[0] )
-        {
-            restore_fields( prec );
-
-            sprintf( fname, "%s_autosave.req", getenv("IOC") );
-            create_monitor_set( fname, 30, "" );
-        }
-
-        return( status );
-    }
+    if ( pass == 1 ) return( status );
 
     // create the archive req file
     create_request( prec, "archive" );
@@ -157,6 +139,7 @@ static long process( dbCommon *precord )
 {
     xps8Record  *prec = (xps8Record *)precord;
     struct XPS8 *ctrl;
+
     int          old_snum;
     short        old_amap;
 
@@ -771,12 +754,12 @@ static void create_request( xps8Record *prec, char const *type )
     char *ioc, *ioc_data, fname[256], tline[80], rline[80], *cp;
     FILE *tpl, *req;
 
-    ioc = getenv( "IOC" );
+    ioc = getenv( "LINUX_NAME" );
     if      ( strcmp(type, "autosave") == 0 )
     {
         if ( ! asTemplateName[0] )           /* no user template, use default */
             sprintf( asTemplateName, "XPS8_%s_autosave.template",
-                                     prec->name[strlen(prec->name)-4] );
+                                     prec->name+(strlen(prec->name)-4) );
 
         if ( asTemplatePath[0] )                            /* user directory */
             strcpy( fname, asTemplatePath );
@@ -796,7 +779,7 @@ static void create_request( xps8Record *prec, char const *type )
         if ( (ioc == NULL) || (ioc_data == NULL) ) return;
 
         sprintf( fname, "%s/archive/XPS8_%s_archive.template",
-                        getenv("TOP"), prec->name[strlen(prec->name)-4] );
+                        getenv("TOP"), prec->name+(strlen(prec->name)-4) );
         tpl = fopen( fname, "r"  );
 
         sprintf( fname, "%s/%s/archive/%s.archive", ioc_data, ioc, ioc );
@@ -815,8 +798,9 @@ static void create_request( xps8Record *prec, char const *type )
 
         if ( (strncmp(cp, "\n", 1) != 0) && (strncmp(cp, "#", 1) != 0) )
         {
-            strncpy( rline, prec->name, strlen(prec->name)-5 );
-            strcat ( rline, tline                            );
+            memset( rline, 0, 80                            );
+            memcpy( rline, prec->name, strlen(prec->name)-5 );
+            strcat( rline, tline                            );
             fputs( rline, req );
         }
         else
@@ -825,116 +809,6 @@ static void create_request( xps8Record *prec, char const *type )
 
     fclose( tpl );
     fclose( req );
-
-    return;
-}
-
-/******************************************************************************/
-static void restore_fields( xps8Record *prec )
-{
-    DBENTRY  dbentry;
-    DBENTRY *pdbentry = &dbentry;
-    char     fname[PATH_SIZE+1], bu_fname[PATH_SIZE+1];
-    char     buffer[BUF_SIZE], value_str[BUF_SIZE];
-    char    *bp, sp, PVname[81], datetime[32];
-    FILE    *inp_fd;
-    int      num_errors, ns, found_field, is_scalar;
-    long     status;
-
-    sprintf( fname, "%s/%s_autosave.sav", saveRestoreFilePath, getenv("IOC") );
-    if ( (inp_fd = fopen_and_check(fname, &status)) == NULL )
-    {
-        Debug( 0, "Can't open save file %s", fname );
-        return;
-    }
-
-    if ( status ) Debug( 0, "Bad sav(B) files, use seq backup" );
-
-    if ( ! pdbbase )
-    {
-        // errlogPrintf("No Database Loaded\n");
-        return;
-    }
-
-    // restore from file
-    dbInitEntry( pdbbase, pdbentry );
-
-    fgets( buffer, BUF_SIZE, inp_fd );                    // discard header line
-
-    num_errors = 0;
-    while ( (bp = fgets(buffer, BUF_SIZE, inp_fd)) )
-    {
-        ns = sscanf( bp, "%80s%c%[^\n\r]", PVname, &sp, value_str );
-        if ( ns             <  3   ) *value_str = 0;
-        if ( PVname[0]      == '#' ) continue;
-        if ( strlen(PVname) >= 80  ) continue;
-        if ( isalpha((int)PVname[0]) || isdigit((int)PVname[0]) )
-        {
-            if ( strchr(PVname, '.') == 0 ) strcat( PVname, ".VAL" );
-            is_scalar = strncmp( value_str, ARRAY_MARKER, ARRAY_MARKER_LEN );
-
-            found_field = 1;
-            if ( (status = dbFindRecord(pdbentry, PVname)) != 0 )
-            {
-                num_errors++;
-                found_field = 0;
-            }
-            else if ( dbFoundField(pdbentry) == 0 )
-            {
-                num_errors++;
-                found_field = 0;
-            }
-
-            if ( found_field )
-            {
-                if ( is_scalar )
-                {
-                    status = scalar_restore  ( 0, pdbentry, PVname, value_str );
-                }
-                else
-                {
-                    status = SR_array_restore( 0, inp_fd,   PVname, value_str );
-                }
-
-                if ( status )
-                {
-                    num_errors++;
-                }
-            }
-        }
-        else if ( PVname[0] == '!' )      // an error message -- something like:
-        {    // '! 7 channel(s) not connected - or not all gets were successful'
-            if ( ! save_restoreIncompleteSetsOk )
-            {
-                fclose( inp_fd );
-                dbFinishEntry( pdbentry );
-                return;
-            }
-        }
-        else if ( PVname[0] == '<' ) break;                       // end of file
-    }
-
-    fclose( inp_fd );
-    dbFinishEntry( pdbentry );
-
-    // write backup file
-    if ( save_restoreDatedBackupFiles && (fGetDateStr(datetime) == 0) )
-        sprintf( bu_fname, "%s_%s", fname, datetime );
-    else
-        sprintf( bu_fname, "%s.bu", fname           );
-
-    if ( save_restoreDebug > 0 )
-    {
-        // errlogPrintf("dbrestore:reboot_restore: writing boot-backup file '%s'.\n", bu_filename);
-    }
-
-    status = (long)myFileCopy( fname, bu_fname );
-    if ( status )
-    {
-        // if (statusStr) strcpy(statusStr, "Can't write backup file");
-    }
-
-    // record status
 
     return;
 }

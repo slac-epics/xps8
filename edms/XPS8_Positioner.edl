@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1430
-y 116
+x 435
+y 85
 w 727
 h 823
 font "helvetica-medium-r-18.0"
@@ -48,7 +48,7 @@ minor 1
 release 0
 x 15
 y 13
-w 130
+w 129
 h 16
 font "helvetica-bold-r-14.0"
 fgColor index 14
@@ -2039,7 +2039,7 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 295
+x 280
 y 638
 w 100
 h 24
@@ -2063,7 +2063,7 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 295
+x 280
 y 678
 w 100
 h 24
@@ -2087,7 +2087,7 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 295
+x 280
 y 730
 w 100
 h 24
@@ -2111,7 +2111,7 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 337
+x 322
 y 758
 w 16
 h 8
@@ -2131,7 +2131,7 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 295
+x 280
 y 770
 w 100
 h 24
@@ -2147,5 +2147,44 @@ offLabel "Home"
 3d
 useEnumNumeric
 font "helvetica-medium-r-12.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 430
+y 495
+w 270
+h 310
+font "helvetica-medium-r-12.0"
+fgColor index 25
+bgColor index 0
+useDisplayBg
+value {
+  "Please Note:"
+  ""
+  "After powering on the controller, and possibly"
+  "auto-config'ing, one needs to decide between"
+  "Homing or Referencing the positioners:"
+  ""
+  "1. if a positioner can travel freely within its full"
+  "   range, one can Home it -- this will guarantee"
+  "   the positioning accuracy and repeatability. "
+  ""
+  "2. if a positioner has been working within EPICS"
+  "   (in the same slot), and one is sure that the"
+  "   positioner has not been commanded to move"
+  "   outside of EPICS, one can choose to Ref. it --"
+  "   this will bring it into the Ready (to move) state"
+  "   without homing."
+  ""
+  "3. if a positioner is new to EPICS (in the given"
+  "   slot), and if it cannot be homed because of"
+  "   restrictions on its travel, one can reference"
+  "   it to a best-known value.  Contact an expert."
+}
 endObjectProperties
 

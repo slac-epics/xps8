@@ -2,7 +2,7 @@ TOP=../..
 
 include $(TOP)/configure/CONFIG
 #----------------------------------------
-#  ADD MACRO DEFINITIONS AFTER THIS LINE
+# ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
 
 #=============================
@@ -11,13 +11,13 @@ DBDINC += xps8Record
 DBDINC += xps8pRecord
 
 # xps8.dbd will be created and installed
-DBD += xps8Support.dbd
+DBD    += xps8Support.dbd
 
 LIBRARY_IOC += xps8
 
 # Add local files
 xps8_SRCS += asynOctetSocket.cpp XPS8_drivers.cpp
-xps8_SRCS += xps8Record.cc xps8pRecord.cc
+xps8_SRCS += XPS8.c xps8Record.cc xps8pRecord.cc
 
 # xps8_LIBS += $(EPICS_BASE_IOC_LIBS)
 
@@ -25,5 +25,5 @@ xps8_SRCS += xps8Record.cc xps8pRecord.cc
 
 include $(TOP)/configure/RULES
 #----------------------------------------
-#  ADD RULES AFTER THIS LINE
+# ADD RULES AFTER THIS LINE
 

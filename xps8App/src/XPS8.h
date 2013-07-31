@@ -95,5 +95,3 @@ typedef union
 /* All db_post_events() calls set both VALUE and LOG bits */
 #define DBE_VAL_LOG (unsigned int) (DBE_VALUE | DBE_LOG)
 
-void Debug( int debug, const char* fmt, ... );
-

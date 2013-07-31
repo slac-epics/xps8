@@ -1,10 +1,10 @@
 TOP=../..
 include $(TOP)/configure/CONFIG
 #----------------------------------------
-#  ADD MACRO DEFINITIONS AFTER THIS LINE
+# ADD MACRO DEFINITIONS AFTER THIS LINE
 
 #----------------------------------------------------
-#  Optimization of db files using dbst (DEFAULT: NO)
+# Optimization of db files using dbst (DEFAULT: NO)
 #DB_OPT = YES
 
 #----------------------------------------------------
@@ -43,5 +43,5 @@ REQ     += XPS8_3340_autosave.template
 
 include $(TOP)/configure/RULES
 #----------------------------------------
-#  ADD RULES AFTER THIS LINE
+# ADD RULES AFTER THIS LINE
 

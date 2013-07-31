@@ -15,7 +15,7 @@ EPICS_BASE=$(EPICS_SITE_TOP)/base/$(BASE_MODULE_VERSION)
 ASYN_MODULE_VERSION    =R4.19.0-0.1.0
 CALC_MODULE_VERSION    =R2.8.0-0.5.0
 SSCAN_MODULE_VERSION   =R2.6.6.0-0.6.0
-AUTOSAVE_MODULE_VERSION=R4.2.1.2-2.7.0
+AUTOSAVE_MODULE_VERSION=R4.2.1.2-2.8.0
 
 # ============================================================
 # External Support module path definitions
@@ -34,5 +34,4 @@ ASYN    =$(EPICS_MODULES)/asyn/$(ASYN_MODULE_VERSION)
 CALC    =$(EPICS_MODULES)/calc/$(CALC_MODULE_VERSION)
 SSCAN   =$(EPICS_MODULES)/sscan/$(SSCAN_MODULE_VERSION)
 AUTOSAVE=$(EPICS_MODULES)/autosave/$(AUTOSAVE_MODULE_VERSION)
-AUTOSAVE=/reg/g/pcds/package/epics/3.14-dev/modules/autosave/$(AUTOSAVE_MODULE_VERSION)
 
