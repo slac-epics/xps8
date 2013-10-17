@@ -315,6 +315,28 @@ static long special( dbAddr *pDbAddr, int after )
         db_post_events( prec, &prec->rall, DBE_VAL_LOG );
         db_post_events( prec, &prec->oref, DBE_VAL_LOG );
     }
+    else if ( fieldIndex == xps8RecordLALL )
+    {
+        log_msg( prec, 0, "Set all positioners to stage limits" );
+        post_msgs( prec );
+
+        prec->lall = 0;
+        prec->olmt = 1 - prec->olmt;
+
+        db_post_events( prec, &prec->lall, DBE_VAL_LOG );
+        db_post_events( prec, &prec->olmt, DBE_VAL_LOG );
+    }
+    else if ( fieldIndex == xps8RecordSALL )
+    {
+        log_msg( prec, 0, "Set all positioners to 1/2 stage speeds" );
+        post_msgs( prec );
+
+        prec->sall = 0;
+        prec->ospd = 1 - prec->ospd;
+
+        db_post_events( prec, &prec->sall, DBE_VAL_LOG );
+        db_post_events( prec, &prec->ospd, DBE_VAL_LOG );
+    }
 
     return( status );
 }

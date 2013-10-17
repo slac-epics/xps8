@@ -376,7 +376,7 @@ static long process( dbCommon *precord )
 
             pinfo->uEvent->signal();
 
-            log_msg( prec, 0, "Desired %f, reached %f, retrying %d", prec->val, prec->rbv, prec->rcnt );
+            log_msg( prec, 0, "Desired %.6g, reached %.6g, retrying %d", prec->val, prec->rbv, prec->rcnt );
         }
         else                                // close enough, or no retry allowed
         {
@@ -385,9 +385,9 @@ static long process( dbCommon *precord )
             prec->mip  = MIP_DONE;
 
             if ( fabs(prec->diff) < prec->rdbd )
-                log_msg( prec, 0, "Desired %f, reached %f",                  prec->val, prec->rbv );
+                log_msg( prec, 0, "Desired %.6g, reached %.6g",                  prec->val, prec->rbv );
             else
-                log_msg( prec, 0, "Desired %f, reached %f after %d retries", prec->val, prec->rbv, prec->rcnt );
+                log_msg( prec, 0, "Desired %.6g, reached %.6g after %d retries", prec->val, prec->rbv, prec->rcnt );
         }
     }
 
@@ -610,7 +610,7 @@ static long special( dbAddr *pDbAddr, int after )
                 epicsThreadSleep( 0.3 );
             }
 
-            log_msg( prec, 0, "Move to: %f (DVAL: %f)", prec->val, prec->dval );
+            log_msg( prec, 0, "Move to: %.6g (DVAL: %.6g)", prec->val, prec->dval );
 
             pinfo->uMutex->lock();
             status = PositionerSGammaParametersSet( pinfo->msocket, pName,
@@ -1151,21 +1151,33 @@ static long special( dbAddr *pDbAddr, int after )
 
             break;
         case ( xps8pRecordSLMT ):
-            prec->dhlm = prec->shlm;
+            log_msg( prec, 0, "Set to stage limits" );
+
             prec->dllm = prec->sllm;
+            prec->dhlm = prec->shlm;
 
-            prec->hlm  = prec->dhlm * (2.*prec->dir - 1.) + prec->off;
-            prec->llm  = prec->dllm * (2.*prec->dir - 1.) + prec->off;
+            if ( prec->dir == xps8pDIR_Positive )
+            {
+                prec->llm  = prec->dllm * (2.*prec->dir - 1.) + prec->off;
+                prec->hlm  = prec->dhlm * (2.*prec->dir - 1.) + prec->off;
+            }
+            else
+            {
+                prec->llm  = prec->dhlm * (2.*prec->dir - 1.) + prec->off;
+                prec->hlm  = prec->dllm * (2.*prec->dir - 1.) + prec->off;
+            }
 
-            db_post_events( prec, &prec->dhlm, DBE_VAL_LOG );
             db_post_events( prec, &prec->dllm, DBE_VAL_LOG );
-            db_post_events( prec, &prec->hlm,  DBE_VAL_LOG );
+            db_post_events( prec, &prec->dhlm, DBE_VAL_LOG );
             db_post_events( prec, &prec->llm,  DBE_VAL_LOG );
+            db_post_events( prec, &prec->hlm,  DBE_VAL_LOG );
 
             prec->slmt = 0;
 
-            break;
+            goto check_limit_violation;
         case ( xps8pRecordSSPD ):
+            log_msg( prec, 0, "Set to 1/2 stage speeds" );
+
             prec->velo = prec->svel / 2.;
             prec->accl = prec->sacc;
 

@@ -16,11 +16,15 @@ DB_INSTALLS += XPS8_1724.db
 DB_INSTALLS += XPS8_2532.db
 DB_INSTALLS += XPS8_3340.db
 
+DB_INSTALLS += XPS8_arbitrary.db
+
 DB_INSTALLS += status_update_0108.db
 DB_INSTALLS += status_update_0916.db
 DB_INSTALLS += status_update_1724.db
 DB_INSTALLS += status_update_2532.db
 DB_INSTALLS += status_update_3340.db
+
+DB_INSTALLS += status_update_arbitrary.db
 
 #----------------------------------------------------
 # Create and install (or just install)
@@ -31,6 +35,8 @@ ARCHIVE += XPS8_1724_archive.template
 ARCHIVE += XPS8_2532_archive.template
 ARCHIVE += XPS8_3340_archive.template
 
+ARCHIVE += XPS8_arbitrary_archive.template
+
 #----------------------------------------------------
 # Create and install (or just install)
 # Autosave request files, templates, substitutions like this
@@ -39,6 +45,8 @@ REQ     += XPS8_0916_autosave.template
 REQ     += XPS8_1724_autosave.template
 REQ     += XPS8_2532_autosave.template
 REQ     += XPS8_3340_autosave.template
+
+REQ     += XPS8_arbitrary_autosave.template
 
 
 include $(TOP)/configure/RULES

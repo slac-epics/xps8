@@ -141,6 +141,28 @@ recordtype(xps8) {
 		interest(1)
 		initial(0)
 	}
+	field(LALL,DBF_SHORT) {
+		prompt("Set Stage Limits All")
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OLMT,DBF_SHORT) {
+		prompt("Stage Limits Toggle")
+		special(SPC_NOMOD)
+		interest(1)
+		initial(0)
+	}
+	field(SALL,DBF_SHORT) {
+		prompt("Set Stage Speeds All")
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OSPD,DBF_SHORT) {
+		prompt("Stage Speeds Toggle")
+		special(SPC_NOMOD)
+		interest(1)
+		initial(0)
+	}
 	field(CMAP,DBF_ULONG) {
 		prompt("Bit Map of Changed Fields")
 		special(SPC_NOMOD)
