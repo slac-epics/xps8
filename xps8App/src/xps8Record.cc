@@ -29,11 +29,6 @@
 #include "xps8Record.h"
 #undef  GEN_SIZE_OFFSET
 
-#include "save_restore.h"
-extern "C" {
-#include "fGetDateStr.h"
-}
-
 #include "epicsExport.h"
 
 #include "XPS8_drivers.h"
@@ -97,12 +92,6 @@ static long log_msg       ( xps8Record *prec, int dlvl, const char *fmt, ... );
 static void post_fields   ( xps8Record *prec, unsigned short all             );
 static void post_msgs     ( xps8Record *prec                                 );
 
-extern char saveRestoreFilePath[];                      // path to restore files
-extern char asTemplatePath[];
-extern char asTemplateName[];
-
-static void create_request( xps8Record *precord,  char const *type           );
-
 
 using namespace std;
 
@@ -115,12 +104,6 @@ static long init_record( dbCommon *precord, int pass )
     long        status = 0;
 
     if ( pass == 1 ) return( status );
-
-    // create the archive req file
-    create_request( prec, "archive" );
-
-    if ( saveRestoreFilePath[0] )                // create the autosave req file
-        create_request( prec, "autosave" );
 
     prec->vers = VERSION;
 
@@ -746,84 +729,5 @@ static long log_msg( xps8Record *prec, int dlvl, const char *fmt, ... )
         printf( "%s.%s %s -- %s\n", timestamp, msec, prec->name, msg );
 
     return( 1 );
-}
-
-/******************************************************************************/
-static void create_request( xps8Record *prec, char const *type )
-{
-    char *ioc, *ioc_data, fname[256], tline[80], rline[80], *cp;
-    FILE *tpl	= NULL;
-	FILE *req	= NULL;
-
-    ioc = getenv( "LINUX_NAME" );
-    if      ( strcmp(type, "autosave") == 0 )
-    {
-        if ( ! asTemplateName[0] )           /* no user template, use default */
-            sprintf( asTemplateName, "XPS8_%s_autosave.template",
-                                     prec->name+(strlen(prec->name)-4) );
-
-        if ( asTemplatePath[0] )                            /* user directory */
-            strcpy( fname, asTemplatePath );
-        else                                             /* default directory */
-            sprintf( fname, "%s/autosave/", getenv("TOP") );
-
-        strcat( fname, asTemplateName );
-        tpl = fopen( fname, "r" );
-		if ( tpl == NULL )
-			printf( "Error opening autosave template file: %s\n", fname );
-
-        sprintf( fname, "%s/%s_autosave.req", saveRestoreFilePath, ioc );
-        req = fopen( fname, "w+" );
-		if ( req == NULL )
-			printf( "Error opening autosave req file: %s\n", fname );
-    }
-    else if ( strcmp(type, "archive" ) == 0 )
-    {
-        ioc_data = getenv( "IOC_DATA" );
-
-        if ( (ioc == NULL) || (ioc_data == NULL) ) return;
-
-        sprintf( fname, "%s/archive/XPS8_%s_archive.template",
-                        getenv("TOP"), prec->name+(strlen(prec->name)-4) );
-        tpl = fopen( fname, "r"  );
-		if ( tpl == NULL )
-			printf( "Error opening archive template file: %s\n", fname );
-
-        sprintf( fname, "%s/%s/archive/%s.archive", ioc_data, ioc, ioc );
-        req = fopen( fname, "w+" );
-		if ( req == NULL )
-			printf( "Error opening archive req file: %s\n", fname );
-    }
-
-	if ( req != NULL && tpl != NULL )
-	{
-		while ( 1 )
-		{
-			fgets( tline, 80, tpl );
-			if ( ferror(tpl) || feof(tpl) ) break;
-
-			cp = tline;
-			while ( ( strncmp(cp, "\n", 1) != 0                                ) &&
-					((strncmp(cp, "\0", 1) == 0) || (strncmp(cp, "\t", 1) == 0))   )
-				cp++;
-
-			if ( (strncmp(cp, "\n", 1) != 0) && (strncmp(cp, "#", 1) != 0) )
-			{
-				memset( rline, 0, 80                            );
-				memcpy( rline, prec->name, strlen(prec->name)-5 );
-				strcat( rline, tline                            );
-				fputs( rline, req );
-			}
-			else
-				fputs( tline, req );
-		}
-	}
-
-	if ( tpl )
-    	fclose( tpl );
-	if ( req )
-    	fclose( req );
-
-    return;
 }
 

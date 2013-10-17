@@ -1,8 +1,8 @@
 include "menuYesNo.dbd"
 
 menu(xps8pDIR) {
-        choice(xps8pDIR_Positive, "Positive")
         choice(xps8pDIR_Negative, "Negative")
+        choice(xps8pDIR_Positive, "Positive")
 }
 menu(xps8pSET) {
         choice(xps8pSET_Use,      "Use")
@@ -87,52 +87,6 @@ recordtype(xps8p) {
 		special(SPC_DBADDR)
 		extra("char *estr")
 		interest(1)
-	}
-        field(DLVL,DBF_SHORT) {
-                prompt("Debugging Level")
-                promptgroup(GUI_COMMON)
-                interest(1)
-                initial("0")
-        }
-	field(LOGA,DBF_NOACCESS) {
-		prompt("Log Message A")
-		special(SPC_DBADDR)
-		extra("char *loga")
-	}
-	field(LOGB,DBF_NOACCESS) {
-		prompt("Log Message B")
-		special(SPC_DBADDR)
-		extra("char *logb")
-	}
-	field(LOGC,DBF_NOACCESS) {
-		prompt("Log Message C")
-		special(SPC_DBADDR)
-		extra("char *logc")
-	}
-	field(LOGD,DBF_NOACCESS) {
-		prompt("Log Message D")
-		special(SPC_DBADDR)
-		extra("char *logd")
-	}
-	field(LOGE,DBF_NOACCESS) {
-		prompt("Log Message E")
-		special(SPC_DBADDR)
-		extra("char *loge")
-	}
-	field(LOGF,DBF_NOACCESS) {
-		prompt("Log Message F")
-		special(SPC_DBADDR)
-		extra("char *logf")
-	}
-	field(LOGG,DBF_NOACCESS) {
-		prompt("Log Message G")
-		special(SPC_DBADDR)
-		extra("char *logg")
-	}
-	field(LOGH,DBF_NOACCESS) {
-		prompt("Log Message H")
-		special(SPC_DBADDR)
-		extra("char *logh")
 	}
 	field(KILL,DBF_SHORT) {
 		prompt("Reset")
@@ -250,17 +204,17 @@ recordtype(xps8p) {
                 prompt("Display Precision")
                 promptgroup(GUI_COMMON)
                 interest(1)
-                initial("3")
+                initial(3)
         }
         field(UINT,DBF_DOUBLE) {
                 prompt("Update Interval")
                 interest(1)
-                initial("0.2")
+                initial(0.3)
         }
         field(HLM,DBF_DOUBLE) {
                 prompt("User High Limit")
                 special(SPC_MOD)
-                initial("2.54")
+                initial(2.54)
         }
         field(LLM,DBF_DOUBLE) {
                 prompt("User Low Limit")
@@ -520,6 +474,16 @@ recordtype(xps8p) {
                 interest(1)
                 initial("1.6")
         }
+        field(SLMT,DBF_SHORT) {
+                prompt("Use Stage Limits")
+                special(SPC_MOD)
+                interest(1)
+        }
+        field(SSPD,DBF_SHORT) {
+                prompt("Use Half of Stage Speeds")
+                special(SPC_MOD)
+                interest(1)
+        }
         field(RCON,DBF_SHORT) {
                 prompt("Re-connect")
                 special(SPC_MOD)
@@ -538,8 +502,54 @@ recordtype(xps8p) {
         field(BUTC,DBF_SHORT) {
                 prompt("Class of Buttons to Show")
                 special(SPC_NOMOD)
-                interest(1)
                 initial("-1")
+                interest(1)
         }
+        field(DLVL,DBF_SHORT) {
+                prompt("Debugging Level")
+                promptgroup(GUI_COMMON)
+                initial("0")
+                interest(1)
+        }
+	field(LOGA,DBF_NOACCESS) {
+		prompt("Log Message A")
+		special(SPC_DBADDR)
+		extra("char *loga")
+	}
+	field(LOGB,DBF_NOACCESS) {
+		prompt("Log Message B")
+		special(SPC_DBADDR)
+		extra("char *logb")
+	}
+	field(LOGC,DBF_NOACCESS) {
+		prompt("Log Message C")
+		special(SPC_DBADDR)
+		extra("char *logc")
+	}
+	field(LOGD,DBF_NOACCESS) {
+		prompt("Log Message D")
+		special(SPC_DBADDR)
+		extra("char *logd")
+	}
+	field(LOGE,DBF_NOACCESS) {
+		prompt("Log Message E")
+		special(SPC_DBADDR)
+		extra("char *loge")
+	}
+	field(LOGF,DBF_NOACCESS) {
+		prompt("Log Message F")
+		special(SPC_DBADDR)
+		extra("char *logf")
+	}
+	field(LOGG,DBF_NOACCESS) {
+		prompt("Log Message G")
+		special(SPC_DBADDR)
+		extra("char *logg")
+	}
+	field(LOGH,DBF_NOACCESS) {
+		prompt("Log Message H")
+		special(SPC_DBADDR)
+		extra("char *logh")
+	}
 }
 

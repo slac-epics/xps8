@@ -17,7 +17,7 @@ LIBRARY_IOC += xps8
 
 # Add local files
 xps8_SRCS += asynOctetSocket.cpp XPS8_drivers.cpp
-xps8_SRCS += XPS8.c xps8Record.cc xps8pRecord.cc
+xps8_SRCS += xps8Record.cc xps8pRecord.cc
 
 # xps8_LIBS += $(EPICS_BASE_IOC_LIBS)
 
