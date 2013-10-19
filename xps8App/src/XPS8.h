@@ -19,8 +19,9 @@ struct XPS8
     epicsMutex *lMutex;
     int         nMessages;
     int         mLength;
-    int         cIndex;
     char       *sAddr;
+    int         cIndex;
+    bool        newMsg;
 
     Positioner  positioner[8];
 };

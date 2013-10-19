@@ -118,6 +118,7 @@ recordtype(xps8p) {
                 promptgroup(GUI_COMMON)
                 menu(xps8pDIR)
                 special(SPC_MOD)
+                initial("Positive")
                 interest(1)
         }
         field(OFF,DBF_DOUBLE) {
@@ -474,13 +475,8 @@ recordtype(xps8p) {
                 interest(1)
                 initial("1.6")
         }
-        field(SLMT,DBF_SHORT) {
-                prompt("Use Stage Limits")
-                special(SPC_MOD)
-                interest(1)
-        }
-        field(SSPD,DBF_SHORT) {
-                prompt("Use Half of Stage Speeds")
+        field(SDFT,DBF_SHORT) {
+                prompt("Use Stage Limits and Max Speeds")
                 special(SPC_MOD)
                 interest(1)
         }

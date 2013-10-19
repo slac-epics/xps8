@@ -87,10 +87,10 @@ int xps8Debug = 0;
 extern "C" { epicsExportAddress( int, xps8Debug ); }
 
 
-static long init_ctrl     ( void *precord                                    );
-static long log_msg       ( xps8Record *prec, int dlvl, const char *fmt, ... );
-static void post_fields   ( xps8Record *prec, unsigned short all             );
-static void post_msgs     ( xps8Record *prec                                 );
+static long init_ctrl  ( xps8Record *prec                                 );
+static long log_msg    ( xps8Record *prec, int dlvl, const char *fmt, ... );
+static void post_fields( xps8Record *prec, unsigned short all             );
+static void post_msgs  ( xps8Record *prec                                 );
 
 
 using namespace std;
@@ -111,9 +111,12 @@ static long init_record( dbCommon *precord, int pass )
     prec->fver = (char *)calloc( 80, sizeof(char) );
     prec->sstr = (char *)calloc( 80, sizeof(char) );
 
-    status = init_ctrl( precord );
+    status = init_ctrl( prec );
 
     prec->udf = 0;
+
+    post_fields( prec, 1 );
+    post_msgs  ( prec    );
 
     return( status );
 }
@@ -226,16 +229,17 @@ static long special( dbAddr *pDbAddr, int after )
 {
     xps8Record  *prec = (xps8Record *)pDbAddr->precord;
     struct XPS8 *ctrl;
-    int          fieldIndex = dbGetFieldIndex( pDbAddr );
 
+    int          fieldIndex = dbGetFieldIndex( pDbAddr );
     long         status = 0;
 
     if ( after != TRUE ) return( status );
 
     if ( fieldIndex == xps8RecordRBUT )
     {
-        ctrl   = (struct XPS8 *)prec->dpvt;
+        log_msg( prec, 0, "Reboot the controller ..." );
 
+        ctrl   = (struct XPS8 *)prec->dpvt;
         status = Reboot( ctrl->socket );
 
         ctrl->socket    = -1;
@@ -247,19 +251,16 @@ static long special( dbAddr *pDbAddr, int after )
             ctrl->positioner[pi].msocket = -1;
         }
 
-        prec->stup = 1 - prec->stup;
-        db_post_events( prec, &prec->stup, DBE_VAL_LOG );
-
-        log_msg( prec, 0, "Reboot the controller ..." );
         prec->snum = -1;
         prec->amap =  0;
 
         prec->rbut =  0;
+        prec->stup = 1 - prec->stup;
+        db_post_events( prec, &prec->stup, DBE_VAL_LOG );
 
         recGblSetSevr( (dbCommon *)prec, COMM_ALARM, INVALID_ALARM );
 
         post_fields( prec, 1 );
-        post_msgs  ( prec    );
     }
     else if ( fieldIndex == xps8RecordRCON )
     {
@@ -271,72 +272,51 @@ static long special( dbAddr *pDbAddr, int after )
             status = init_ctrl( prec );
             ctrl->uMutex->unlock();
 
-            post_fields( prec, 1 );
-            post_msgs  ( prec    );
-
-            prec->rcon = 0;
             prec->ocon = 1 - prec->ocon;
-
-            db_post_events( prec, &prec->rcon, DBE_VAL_LOG );
             db_post_events( prec, &prec->ocon, DBE_VAL_LOG );
+
+            post_fields( prec, 1 );
         }
+
+        prec->rcon = 0;
     }
     else if ( fieldIndex == xps8RecordKALL )
     {
-        ctrl   = (struct XPS8 *)prec->dpvt;
+        log_msg( prec, 0, "Kill-All, please re-init, then home / reference" );
 
+        ctrl   = (struct XPS8 *)prec->dpvt;
         status = KillAll( ctrl->socket );
 
+        prec->kall = 0;
         prec->stup = 1 - prec->stup;
         db_post_events( prec, &prec->stup, DBE_VAL_LOG );
-
-        log_msg( prec, 0, "Kill-All, please re-init, then home / reference" );
-        post_msgs( prec );
     }
     else if ( fieldIndex == xps8RecordIALL )
     {
         log_msg( prec, 0, "Initialize all positioners" );
-        post_msgs( prec );
 
         prec->iall = 0;
         prec->oini = 1 - prec->oini;
-
-        db_post_events( prec, &prec->iall, DBE_VAL_LOG );
         db_post_events( prec, &prec->oini, DBE_VAL_LOG );
     }
     else if ( fieldIndex == xps8RecordRALL )
     {
         log_msg( prec, 0, "Reference all positioners" );
-        post_msgs( prec );
 
         prec->rall = 0;
         prec->oref = 1 - prec->oref;
-
-        db_post_events( prec, &prec->rall, DBE_VAL_LOG );
         db_post_events( prec, &prec->oref, DBE_VAL_LOG );
     }
-    else if ( fieldIndex == xps8RecordLALL )
+    else if ( fieldIndex == xps8RecordSDFT )
     {
-        log_msg( prec, 0, "Set all positioners to stage limits" );
-        post_msgs( prec );
+        log_msg( prec, 0, "Use stage limits and max speeds" );
 
-        prec->lall = 0;
-        prec->olmt = 1 - prec->olmt;
-
-        db_post_events( prec, &prec->lall, DBE_VAL_LOG );
-        db_post_events( prec, &prec->olmt, DBE_VAL_LOG );
+        prec->sdft = 0;
+        prec->osdf = 1 - prec->osdf;
+        db_post_events( prec, &prec->osdf, DBE_VAL_LOG );
     }
-    else if ( fieldIndex == xps8RecordSALL )
-    {
-        log_msg( prec, 0, "Set all positioners to 1/2 stage speeds" );
-        post_msgs( prec );
 
-        prec->sall = 0;
-        prec->ospd = 1 - prec->ospd;
-
-        db_post_events( prec, &prec->sall, DBE_VAL_LOG );
-        db_post_events( prec, &prec->ospd, DBE_VAL_LOG );
-    }
+    post_msgs( prec );
 
     return( status );
 }
@@ -454,11 +434,9 @@ static long cvt_dbaddr( dbAddr *pDbAddr )
     return( status );
 }
 
-static long init_ctrl( void *precord )
+static long init_ctrl( xps8Record *prec )
 {
-    xps8Record *prec = (xps8Record *)precord;
-
-    long        rtnval, status = 0;
+    long  rtnval, status = 0;
 
     if ( ! XPS8_Ctrl )
     {
@@ -660,8 +638,6 @@ static long init_ctrl( void *precord )
     else if ( (status == -1) || (prec->snum != 0) )
         recGblSetSevr( (dbCommon *)prec, STATE_ALARM, MAJOR_ALARM   );
 
-    post_fields( prec, 1 );
-
     return( status );
 }
 
@@ -702,14 +678,23 @@ static void post_fields( xps8Record *prec, unsigned short all )
 
 static void post_msgs( xps8Record *prec )
 {
-    db_post_events( prec,  prec->loga, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logb, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logc, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logd, DBE_VAL_LOG );
-    db_post_events( prec,  prec->loge, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logf, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logg, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logh, DBE_VAL_LOG );
+    XPS8_Ctrl->lMutex->lock();
+
+    if ( XPS8_Ctrl->newMsg )
+    {
+        db_post_events( prec,  prec->loga, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logb, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logc, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logd, DBE_VAL_LOG );
+        db_post_events( prec,  prec->loge, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logf, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logg, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logh, DBE_VAL_LOG );
+
+        XPS8_Ctrl->newMsg = 0;
+    }
+
+    XPS8_Ctrl->lMutex->unlock();
 
     return;
 }
@@ -744,6 +729,8 @@ static long log_msg( xps8Record *prec, int dlvl, const char *fmt, ... )
               "%s %s", timestamp+6, msg );
 
     if ( XPS8_Ctrl->cIndex <= 7 ) XPS8_Ctrl->cIndex++;
+
+    XPS8_Ctrl->newMsg = 1;
 
     XPS8_Ctrl->lMutex->unlock();
 

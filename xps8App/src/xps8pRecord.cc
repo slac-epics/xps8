@@ -115,8 +115,9 @@ struct positioner_info
     epicsMutex          *lMutex;
     int                  nMessages;
     int                  mLength;
-    int                  cIndex;
     char                *sAddr;
+    int                  cIndex;
+    bool                 newMsg;
 };
 
 static long init_positioner      ( xps8pRecord *prec );
@@ -692,8 +693,16 @@ static long special( dbAddr *pDbAddr, int after )
                 pinfo->poll = 1;
                 pinfo->uMutex->unlock();
 
-                if ( prec->spg == xps8pSPG_Stop ) prec->mip |= MIP_STOP;
-                else                              prec->mip |= MIP_PAUSE;
+                if ( prec->spg == xps8pSPG_Stop )
+                {
+                    prec->mip |= MIP_STOP;
+                    log_msg( prec, 0, "Stopping ..." );
+                }
+                else
+                {
+                    prec->mip |= MIP_PAUSE;
+                    log_msg( prec, 0, "Pausing ..."  );
+                }
             }
 
             MARK( M_MIP  );
@@ -772,7 +781,7 @@ static long special( dbAddr *pDbAddr, int after )
 
             prec->mip  = MIP_HOME;
 
-            log_msg( prec, 0, "Home" );
+            log_msg( prec, 0, "Homing ..." );
 
             kill_init_home:
             prec->lvio = 0;
@@ -1150,8 +1159,8 @@ static long special( dbAddr *pDbAddr, int after )
                                     pMenu->papChoiceValue[prec->htyp] );
 
             break;
-        case ( xps8pRecordSLMT ):
-            log_msg( prec, 0, "Set to stage limits" );
+        case ( xps8pRecordSDFT ):
+            log_msg( prec, 0, "Use stage limits and max speeds" );
 
             prec->dllm = prec->sllm;
             prec->dhlm = prec->shlm;
@@ -1172,16 +1181,10 @@ static long special( dbAddr *pDbAddr, int after )
             db_post_events( prec, &prec->llm,  DBE_VAL_LOG );
             db_post_events( prec, &prec->hlm,  DBE_VAL_LOG );
 
-            prec->slmt = 0;
-
-            goto check_limit_violation;
-        case ( xps8pRecordSSPD ):
-            log_msg( prec, 0, "Set to 1/2 stage speeds" );
-
-            prec->velo = prec->svel / 2.;
+            prec->velo = prec->svel;
             prec->accl = prec->sacc;
 
-            prec->hvel = prec->shve / 2.;
+            prec->hvel = prec->shve;
             prec->hacc = prec->shac;
 
             prec->minj = prec->slj;
@@ -1194,9 +1197,9 @@ static long special( dbAddr *pDbAddr, int after )
             db_post_events( prec, &prec->minj, DBE_VAL_LOG );
             db_post_events( prec, &prec->maxj, DBE_VAL_LOG );
 
-            prec->sspd = 0;
+            prec->sdft = 0;
 
-            break;
+            goto check_limit_violation;
         case ( xps8pRecordRCON ):
             status = init_positioner( prec );
             break;
@@ -1216,6 +1219,7 @@ static long special( dbAddr *pDbAddr, int after )
     }
 
     post_fields( prec, alarm_mask, 0 );
+    post_msgs  ( prec                );
 
     return( status );
 }
@@ -1428,6 +1432,7 @@ static long init_positioner( xps8pRecord *prec )
 
     alarm_mask = recGblResetAlarms( prec );
     post_fields( prec, alarm_mask, 1 );
+    post_msgs  ( prec                );
 
     return( status );
 }
@@ -1855,14 +1860,25 @@ static void post_fields( xps8pRecord *prec, unsigned short alarm_mask,
 
 static void post_msgs( xps8pRecord *prec )
 {
-    db_post_events( prec,  prec->loga, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logb, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logc, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logd, DBE_VAL_LOG );
-    db_post_events( prec,  prec->loge, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logf, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logg, DBE_VAL_LOG );
-    db_post_events( prec,  prec->logh, DBE_VAL_LOG );
+    positioner_info *pinfo = (positioner_info *)prec->dpvt;
+
+    pinfo->lMutex->lock();
+
+    if ( pinfo->newMsg )
+    {
+        db_post_events( prec,  prec->loga, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logb, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logc, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logd, DBE_VAL_LOG );
+        db_post_events( prec,  prec->loge, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logf, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logg, DBE_VAL_LOG );
+        db_post_events( prec,  prec->logh, DBE_VAL_LOG );
+
+        pinfo->newMsg = 0;
+    }
+
+    pinfo->lMutex->unlock();
 
     return;
 }
@@ -1901,10 +1917,13 @@ static long log_msg( xps8pRecord *prec, int dlvl, const char *fmt, ... )
 
         if ( pinfo->cIndex <= 7 ) pinfo->cIndex++;
 
+        pinfo->newMsg = 1;
+
         pinfo->lMutex->unlock();
     }
 
-    printf( "%s.%s %s -- %s\n", timestamp, msec, prec->name, msg );
+    if ( dlvl <= xps8Debug )
+        printf( "%s.%s %s -- %s\n", timestamp, msec, prec->name, msg );
 
     return( 1 );
 }
