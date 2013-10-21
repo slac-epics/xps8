@@ -5,7 +5,7 @@ include $(TOP)/configure/CONFIG
 
 #----------------------------------------------------
 # Optimization of db files using dbst (DEFAULT: NO)
-#DB_OPT = YES
+# DB_OPT = YES
 
 #----------------------------------------------------
 # Create and install (or just install)
@@ -15,6 +15,7 @@ DB_INSTALLS += XPS8_0916.db
 DB_INSTALLS += XPS8_1724.db
 DB_INSTALLS += XPS8_2532.db
 DB_INSTALLS += XPS8_3340.db
+DB_INSTALLS += XPS8_4148.db
 
 DB_INSTALLS += XPS8_arbitrary.db
 
@@ -23,6 +24,7 @@ DB_INSTALLS += status_update_0916.db
 DB_INSTALLS += status_update_1724.db
 DB_INSTALLS += status_update_2532.db
 DB_INSTALLS += status_update_3340.db
+DB_INSTALLS += status_update_4148.db
 
 DB_INSTALLS += status_update_arbitrary.db
 
@@ -34,6 +36,7 @@ ARCHIVE += XPS8_0916_archive.template
 ARCHIVE += XPS8_1724_archive.template
 ARCHIVE += XPS8_2532_archive.template
 ARCHIVE += XPS8_3340_archive.template
+ARCHIVE += XPS8_4148_archive.template
 
 ARCHIVE += XPS8_arbitrary_archive.template
 
@@ -45,6 +48,7 @@ REQ     += XPS8_0916_autosave.template
 REQ     += XPS8_1724_autosave.template
 REQ     += XPS8_2532_autosave.template
 REQ     += XPS8_3340_autosave.template
+REQ     += XPS8_4148_autosave.template
 
 REQ     += XPS8_arbitrary_autosave.template
 

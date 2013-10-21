@@ -1377,8 +1377,6 @@ static long init_positioner( xps8pRecord *prec )
     pinfo->msocket = XPS8_Ctrl->positioner[prec->card].msocket;
     if ( (pinfo->usocket >= 0) && (pinfo->msocket >= 0) )
     {
-        check_software_limits( prec );
-
         status  = update_misc( prec );
 
         strncpy( pName, XPS8_Ctrl->positioner[prec->card].pname, 80 );
@@ -1411,6 +1409,44 @@ static long init_positioner( xps8pRecord *prec )
         {
             recGblSetSevr( (dbCommon *)prec, STATE_ALARM, MAJOR_ALARM );
             recGblResetAlarms( prec );
+        }
+
+        check_software_limits( prec );
+
+        if ( prec->velo > prec->svel )
+        {
+            prec->velo = prec->svel;
+            db_post_events( prec, &prec->velo, DBE_VAL_LOG );
+        }
+
+        if ( prec->accl > prec->sacc )
+        {
+            prec->accl = prec->sacc;
+            db_post_events( prec, &prec->accl, DBE_VAL_LOG );
+        }
+
+        if ( prec->hvel > prec->shve )
+        {
+            prec->hvel = prec->shve;
+            db_post_events( prec, &prec->hvel, DBE_VAL_LOG );
+        }
+
+        if ( prec->hacc > prec->shac )
+        {
+            prec->hacc = prec->shac;
+            db_post_events( prec, &prec->hacc, DBE_VAL_LOG );
+        }
+
+        if ( prec->minj < prec->slj  )
+        {
+            prec->minj = prec->slj;
+            db_post_events( prec, &prec->minj, DBE_VAL_LOG );
+        }
+
+        if ( prec->maxj > prec->shj  )
+        {
+            prec->maxj = prec->shj;
+            db_post_events( prec, &prec->maxj, DBE_VAL_LOG );
         }
 
         pinfo->uEvent->signal();
