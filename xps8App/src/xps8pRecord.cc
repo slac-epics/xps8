@@ -1371,12 +1371,12 @@ static long init_positioner( xps8pRecord *prec )
 
     long             status = 0;
 
-    log_msg( prec, 0, "Initialize positioner" );
-
     pinfo->usocket = XPS8_Ctrl->positioner[prec->card].usocket;
     pinfo->msocket = XPS8_Ctrl->positioner[prec->card].msocket;
     if ( (pinfo->usocket >= 0) && (pinfo->msocket >= 0) )
     {
+        log_msg( prec, 0, "Initialize positioner" );
+
         status  = update_misc( prec );
 
         strncpy( pName, XPS8_Ctrl->positioner[prec->card].pname, 80 );
