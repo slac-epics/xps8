@@ -113,7 +113,7 @@ static long init_record( dbCommon *precord, int pass )
 
     status = init_ctrl( prec );
 
-    prec->udf = 0;
+    prec->udf  = 0;
 
     post_fields( prec, 1 );
     post_msgs  ( prec    );
@@ -235,7 +235,17 @@ static long special( dbAddr *pDbAddr, int after )
 
     if ( after != TRUE ) return( status );
 
-    if ( fieldIndex == xps8RecordRBUT )
+    if ( fieldIndex == xps8RecordDFUT )
+    {
+        if ( prec->dfut == xps8DFUT_Tight )
+            log_msg( prec, 0, "Set new positioner to tight limits" );
+        else
+            log_msg( prec, 0, "Set new positioner to stage maxs"   );
+
+        ctrl = (struct XPS8 *)prec->dpvt;
+        ctrl->defaults = prec->dfut;
+    }
+    else if ( fieldIndex == xps8RecordRBUT )
     {
         log_msg( prec, 0, "Reboot the controller ..." );
 
@@ -624,19 +634,19 @@ static long init_ctrl( xps8Record *prec )
     }
 
     finished:
-    XPS8_Ctrl->update = 0;
-    if ( status == -9 )
-        XPS8_Ctrl->connected = 0;
-    else
-    {
-        XPS8_Ctrl->connected = 1;
-        if ( prec->amap > 0 ) XPS8_Ctrl->update = 1;
-    }
+    XPS8_Ctrl->defaults  = prec->dfut;
+    XPS8_Ctrl->connected = 0;
+    XPS8_Ctrl->update    = 0;
 
     if ( status == -9 )
         recGblSetSevr( (dbCommon *)prec, COMM_ALARM,  INVALID_ALARM );
     else if ( (status == -1) || (prec->snum != 0) )
         recGblSetSevr( (dbCommon *)prec, STATE_ALARM, MAJOR_ALARM   );
+    else
+    {
+        XPS8_Ctrl->connected = 1;
+        if ( prec->amap > 0 ) XPS8_Ctrl->update = 1;
+    }
 
     return( status );
 }

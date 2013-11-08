@@ -1,3 +1,8 @@
+menu(xps8DFUT) {
+	choice(xps8DFUT_Tight, "0 ~ 2.54 etc")
+	choice(xps8DFUT_Stage, "Stage Maxs"  )
+}
+
 recordtype(xps8) {
 	include "dbCommon.dbd" 
 	field(VERS,DBF_FLOAT) {
@@ -23,6 +28,13 @@ recordtype(xps8) {
 		special(SPC_NOMOD)
 		interest(1)
 		initial(5001)
+	}
+	field(DFUT,DBF_MENU) {
+		prompt("Default Settings for New Positioner")
+		menu(xps8DFUT)
+		special(SPC_MOD)
+		initial(0)
+		interest(1)
 	}
 	field(SERR,DBF_NOACCESS) {
 		prompt("Socket Error")

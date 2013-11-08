@@ -28,12 +28,30 @@ menu(xps8pHTYP) {
 }
 
 recordtype(xps8p) {
-	include "dbCommon.dbd" 
+	include "dbCommon.dbd"
+	field(HOST,DBF_STRING) {
+		prompt("Name of Host Machine")
+		special(SPC_NOMOD)
+		interest(1)
+		size(61)
+	}
+	field(IOCN,DBF_STRING) {
+		prompt("Linux Name of IOC")
+		special(SPC_NOMOD)
+		interest(1)
+		size(61)
+	}
         field(CARD,DBF_SHORT) {
                 prompt("Card Number")
                 special(SPC_NOMOD)
                 interest(1)
         }
+	field(PTYP,DBF_STRING) {
+		prompt("Previous Type of the Stage")
+		special(SPC_NOMOD)
+		interest(1)
+		size(61)
+	}
 	field(TYPE,DBF_STRING) {
 		prompt("Type of the Stage")
 		special(SPC_NOMOD)

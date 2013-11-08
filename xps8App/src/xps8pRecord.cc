@@ -194,6 +194,9 @@ static long init_record( dbCommon *precord, int pass )
 
     prec->dpvt           = pinfo;
 
+    gethostname( prec->host, 60            );
+    strcpy     ( prec->iocn, getenv("IOC") );
+
     callbackSetCallback( (void (*)(struct callbackPvt *)) positioner_callback,
                          &(pinfo->callback) );
     callbackSetPriority( priorityMedium, &(pinfo->callback) );
@@ -1368,8 +1371,12 @@ static long init_positioner( xps8pRecord *prec )
     positioner_info *pinfo = (positioner_info *)prec->dpvt;
     unsigned short   alarm_mask;
     char             pName[80];
+    bool             defaults;
 
     long             status = 0;
+
+    if ( (XPS8_Ctrl->connected == 1) && (XPS8_Ctrl->update == 1) )
+        prec->type[0] = '\0';
 
     pinfo->usocket = XPS8_Ctrl->positioner[prec->card].usocket;
     pinfo->msocket = XPS8_Ctrl->positioner[prec->card].msocket;
@@ -1385,14 +1392,17 @@ static long init_positioner( xps8pRecord *prec )
 
         status |= Login( pinfo->msocket, "Administrator", "Administrator" );
 
+        defaults = (strcmp(prec->ptyp, prec->type) != 0) &&
+                   (XPS8_Ctrl->defaults            == 1);
+
         // set the user limits and backlash etc
-        if ( prec->dllm < prec->sllm )
+        if ( (prec->dllm < prec->sllm) || (defaults == 1) )
         {
             prec->dllm = prec->sllm;
             db_post_events( prec, &prec->dllm, DBE_VAL_LOG );
         }
 
-        if ( prec->dhlm > prec->shlm )
+        if ( (prec->dhlm > prec->shlm) || (defaults == 1) )
         {
             prec->dhlm = prec->shlm;
             db_post_events( prec, &prec->dhlm, DBE_VAL_LOG );
@@ -1413,37 +1423,37 @@ static long init_positioner( xps8pRecord *prec )
 
         check_software_limits( prec );
 
-        if ( prec->velo > prec->svel )
+        if ( (prec->velo > prec->svel) || (defaults == 1) )
         {
             prec->velo = prec->svel;
             db_post_events( prec, &prec->velo, DBE_VAL_LOG );
         }
 
-        if ( prec->accl > prec->sacc )
+        if ( (prec->accl > prec->sacc) || (defaults == 1) )
         {
             prec->accl = prec->sacc;
             db_post_events( prec, &prec->accl, DBE_VAL_LOG );
         }
 
-        if ( prec->hvel > prec->shve )
+        if ( (prec->hvel > prec->shve) || (defaults == 1) )
         {
             prec->hvel = prec->shve;
             db_post_events( prec, &prec->hvel, DBE_VAL_LOG );
         }
 
-        if ( prec->hacc > prec->shac )
+        if ( (prec->hacc > prec->shac) || (defaults == 1) )
         {
             prec->hacc = prec->shac;
             db_post_events( prec, &prec->hacc, DBE_VAL_LOG );
         }
 
-        if ( prec->minj < prec->slj  )
+        if ( (prec->minj < prec->slj ) || (defaults == 1) )
         {
             prec->minj = prec->slj;
             db_post_events( prec, &prec->minj, DBE_VAL_LOG );
         }
 
-        if ( prec->maxj > prec->shj  )
+        if ( (prec->maxj > prec->shj ) || (defaults == 1) )
         {
             prec->maxj = prec->shj;
             db_post_events( prec, &prec->maxj, DBE_VAL_LOG );
@@ -1466,6 +1476,10 @@ static long init_positioner( xps8pRecord *prec )
         prec->udf  =   1;
     }
 
+    strcpy( prec->ptyp, prec->type );
+    db_post_events( prec,  prec->type, DBE_VAL_LOG );
+    db_post_events( prec,  prec->ptyp, DBE_VAL_LOG );
+
     alarm_mask = recGblResetAlarms( prec );
     post_fields( prec, alarm_mask, 1 );
     post_msgs  ( prec                );
@@ -1486,7 +1500,6 @@ static long update_misc( xps8pRecord *prec )
 
     strncpy( pName,      XPS8_Ctrl->positioner[prec->card].pname, 60 );
     strncpy( prec->type, XPS8_Ctrl->positioner[prec->card].stage, 60 );
-    db_post_events( prec,  prec->type, DBE_VAL_LOG );
 
     pinfo->uMutex->lock();
 

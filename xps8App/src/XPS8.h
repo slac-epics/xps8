@@ -14,6 +14,7 @@ struct XPS8
     epicsMutex *uMutex;
     int         socket;
     int         connected;
+    int         defaults;
     int         update;
 
     epicsMutex *lMutex;

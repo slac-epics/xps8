@@ -1,6 +1,9 @@
 $(DEVICE)_4148:UpdateClock.SCAN    86400    monitor
 $(DEVICE)_4148:UpdateMultiplier    86400    monitor
 
+$(DEVICE)_4148.DFUT                86400    monitor
+
+$(DEVICE):41.PTYP    86400    monitor
 $(DEVICE):41.DESC    86400    monitor
 $(DEVICE):41.EGU     86400    monitor
 $(DEVICE):41.VAL     86400    monitor
@@ -31,6 +34,7 @@ $(DEVICE):41.RTRY    86400    monitor
 $(DEVICE):41.UINT    86400    monitor
 $(DEVICE):41.PDBD    86400    monitor
 
+$(DEVICE):42.PTYP    86400    monitor
 $(DEVICE):42.DESC    86400    monitor
 $(DEVICE):42.EGU     86400    monitor
 $(DEVICE):42.VAL     86400    monitor
@@ -61,6 +65,7 @@ $(DEVICE):42.RTRY    86400    monitor
 $(DEVICE):42.UINT    86400    monitor
 $(DEVICE):42.PDBD    86400    monitor
 
+$(DEVICE):43.PTYP    86400    monitor
 $(DEVICE):43.DESC    86400    monitor
 $(DEVICE):43.EGU     86400    monitor
 $(DEVICE):43.VAL     86400    monitor
@@ -91,6 +96,7 @@ $(DEVICE):43.RTRY    86400    monitor
 $(DEVICE):43.UINT    86400    monitor
 $(DEVICE):43.PDBD    86400    monitor
 
+$(DEVICE):44.PTYP    86400    monitor
 $(DEVICE):44.DESC    86400    monitor
 $(DEVICE):44.EGU     86400    monitor
 $(DEVICE):44.VAL     86400    monitor
@@ -121,6 +127,7 @@ $(DEVICE):44.RTRY    86400    monitor
 $(DEVICE):44.UINT    86400    monitor
 $(DEVICE):44.PDBD    86400    monitor
 
+$(DEVICE):45.PTYP    86400    monitor
 $(DEVICE):45.DESC    86400    monitor
 $(DEVICE):45.EGU     86400    monitor
 $(DEVICE):45.VAL     86400    monitor
@@ -151,6 +158,7 @@ $(DEVICE):45.RTRY    86400    monitor
 $(DEVICE):45.UINT    86400    monitor
 $(DEVICE):45.PDBD    86400    monitor
 
+$(DEVICE):46.PTYP    86400    monitor
 $(DEVICE):46.DESC    86400    monitor
 $(DEVICE):46.EGU     86400    monitor
 $(DEVICE):46.VAL     86400    monitor
@@ -181,6 +189,7 @@ $(DEVICE):46.RTRY    86400    monitor
 $(DEVICE):46.UINT    86400    monitor
 $(DEVICE):46.PDBD    86400    monitor
 
+$(DEVICE):47.PTYP    86400    monitor
 $(DEVICE):47.DESC    86400    monitor
 $(DEVICE):47.EGU     86400    monitor
 $(DEVICE):47.VAL     86400    monitor
@@ -211,6 +220,7 @@ $(DEVICE):47.RTRY    86400    monitor
 $(DEVICE):47.UINT    86400    monitor
 $(DEVICE):47.PDBD    86400    monitor
 
+$(DEVICE):48.PTYP    86400    monitor
 $(DEVICE):48.DESC    86400    monitor
 $(DEVICE):48.EGU     86400    monitor
 $(DEVICE):48.VAL     86400    monitor
