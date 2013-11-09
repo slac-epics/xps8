@@ -216,6 +216,7 @@ recordtype(xps8p) {
         field(EGU,DBF_STRING) {
                 prompt("Engineering Units")
                 promptgroup(GUI_COMMON)
+                special(SPC_NOMOD)
                 interest(1)
                 size(16)
         }

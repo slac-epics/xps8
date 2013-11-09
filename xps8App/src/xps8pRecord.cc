@@ -1503,8 +1503,14 @@ static long update_misc( xps8pRecord *prec )
 
     pinfo->uMutex->lock();
 
-    sprintf( par,  "MinimumTargetPosition"         );
+    sprintf( par,  "Unit"                          );
     status |= PositionerStageParameterGet( pinfo->usocket, pName, par, pstr );
+    strncpy( prec->egu , pstr, 16 );
+    db_post_events( prec,  prec->egu , DBE_VAL_LOG );
+
+    // DHZ: when new stage database is deployed, put back the "|" for status
+    sprintf( par,  "MinimumTargetPosition"         );
+    status  = PositionerStageParameterGet( pinfo->usocket, pName, par, pstr );
     status |= ( sscanf( pstr, "%lf", &prec->sllm ) != 1 );
     db_post_events( prec, &prec->sllm, DBE_VAL_LOG );
 
