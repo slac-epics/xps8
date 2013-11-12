@@ -1,0 +1,42 @@
+record(longout, "$(DEVICE)_$(C1)$(C8):UpdateMultiplier") {
+  field(DESC, "Update Multiplier")
+  field(VAL,  "$(multiplier)")
+}
+
+record(calcout, "$(DEVICE)_$(C1)$(C8):UpdateClock") {
+  field(DESC, "Update Clock")
+  field(INPA, "$(DEVICE)_$(C1)$(C8):UpdateClock")
+  field(INPB, "$(DEVICE)_$(C1)$(C8):UpdateMultiplier NPP")
+  field(OUT,  "$(DEVICE)_$(C1)$(C8):UpdateToggle.PROC")
+  field(CALC, "(A+1)%B")
+  field(OCAL, "1")
+  field(OOPT, "When Zero")
+  field(DOPT, "Use OCAL")
+  field(SCAN, "$(basePeriod)")
+}
+
+record(calc, "$(DEVICE)_$(C1)$(C8):UpdateToggle") {
+  field(DESC, "Update Toggle")
+  field(INPA, "$(DEVICE)_$(C1)$(C8):UpdateToggle")
+  field(CALC, "1-A")
+  field(FLNK, "$(DEVICE)_$(C1)$(C8):UpdateEvtSeq")
+  field(SCAN, "Passive")
+}
+
+record(calcout, "$(DEVICE)_$(C1)$(C8):UpdateEvtSeq") {
+  field(DESC, "Update Event Sequencer")
+  field(INPA, "$(DEVICE)_$(C1)$(C8):UpdateEvtSeq")
+  field(INPB, "$(DEVICE)_$(C1)$(C8):UpdateToggle")
+  field(OUT,  "$(DEVICE)_$(C1)$(C8):UpdateEvtGen.VAL PP")
+  field(CALC, "A%16+1")
+  field(OCAL, "MIN(FLOOR((A%16+2.1)/2)+B*9,9)")
+  field(DOPT, "Use OCAL")
+  field(OOPT, "Every Time")
+  field(SCAN, "Passive")
+}
+
+record(event, "$(DEVICE)_$(C1)$(C8):UpdateEvtGen") {
+  field(DESC, "Update Event Generator")
+  field(SCAN, "Passive")
+}
+

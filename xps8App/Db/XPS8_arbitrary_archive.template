@@ -5,7 +5,6 @@ $(DEVICE).DFUT                86400    monitor
 
 $(POS1).PTYP    86400    monitor
 $(POS1).DESC    86400    monitor
-$(POS1).EGU     86400    monitor
 $(POS1).VAL     86400    monitor
 $(POS1).DVAL    86400    monitor
 $(POS1).DRBV    86400    monitor
@@ -36,7 +35,6 @@ $(POS1).PDBD    86400    monitor
 
 $(POS2).PTYP    86400    monitor
 $(POS2).DESC    86400    monitor
-$(POS2).EGU     86400    monitor
 $(POS2).VAL     86400    monitor
 $(POS2).DVAL    86400    monitor
 $(POS2).DRBV    86400    monitor
@@ -67,7 +65,6 @@ $(POS2).PDBD    86400    monitor
 
 $(POS3).PTYP    86400    monitor
 $(POS3).DESC    86400    monitor
-$(POS3).EGU     86400    monitor
 $(POS3).VAL     86400    monitor
 $(POS3).DVAL    86400    monitor
 $(POS3).DRBV    86400    monitor
@@ -98,7 +95,6 @@ $(POS3).PDBD    86400    monitor
 
 $(POS4).PTYP    86400    monitor
 $(POS4).DESC    86400    monitor
-$(POS4).EGU     86400    monitor
 $(POS4).VAL     86400    monitor
 $(POS4).DVAL    86400    monitor
 $(POS4).DRBV    86400    monitor
@@ -129,7 +125,6 @@ $(POS4).PDBD    86400    monitor
 
 $(POS5).PTYP    86400    monitor
 $(POS5).DESC    86400    monitor
-$(POS5).EGU     86400    monitor
 $(POS5).VAL     86400    monitor
 $(POS5).DVAL    86400    monitor
 $(POS5).DRBV    86400    monitor
@@ -160,7 +155,6 @@ $(POS5).PDBD    86400    monitor
 
 $(POS6).PTYP    86400    monitor
 $(POS6).DESC    86400    monitor
-$(POS6).EGU     86400    monitor
 $(POS6).VAL     86400    monitor
 $(POS6).DVAL    86400    monitor
 $(POS6).DRBV    86400    monitor
@@ -191,7 +185,6 @@ $(POS6).PDBD    86400    monitor
 
 $(POS7).PTYP    86400    monitor
 $(POS7).DESC    86400    monitor
-$(POS7).EGU     86400    monitor
 $(POS7).VAL     86400    monitor
 $(POS7).DVAL    86400    monitor
 $(POS7).DRBV    86400    monitor
@@ -222,7 +215,6 @@ $(POS7).PDBD    86400    monitor
 
 $(POS8).PTYP    86400    monitor
 $(POS8).DESC    86400    monitor
-$(POS8).EGU     86400    monitor
 $(POS8).VAL     86400    monitor
 $(POS8).DVAL    86400    monitor
 $(POS8).DRBV    86400    monitor
