@@ -1,8 +1,8 @@
 include "menuYesNo.dbd"
 
 menu(xps8pDIR) {
-        choice(xps8pDIR_Negative, "Negative")
-        choice(xps8pDIR_Positive, "Positive")
+        choice(xps8pDIR_Pos,      "Pos")
+        choice(xps8pDIR_Neg,      "Neg")
 }
 menu(xps8pSET) {
         choice(xps8pSET_Use,      "Use")
@@ -136,7 +136,7 @@ recordtype(xps8p) {
                 promptgroup(GUI_COMMON)
                 menu(xps8pDIR)
                 special(SPC_MOD)
-                initial("Positive")
+                initial("Pos")
                 interest(1)
         }
         field(OFF,DBF_DOUBLE) {

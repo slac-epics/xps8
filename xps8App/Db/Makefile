@@ -19,14 +19,14 @@ DB_INSTALLS += status_update_arbitrary.db
 #----------------------------------------------------
 # Create and install (or just install)
 # Archive files, templates, substitutions like this
-ARCHIVE += XPS8_archive.template
-ARCHIVE += XPS8_arbitrary_archive.template
+ARCHIVE += XPS8_archive.tpl-arch
+ARCHIVE += XPS8_arbitrary_archive.tpl-arch
 
 #----------------------------------------------------
 # Create and install (or just install)
 # Autosave request files, templates, substitutions like this
-REQ     += XPS8_autosave.template
-REQ     += XPS8_arbitrary_autosave.template
+REQ     += XPS8_autosave.tpl-req
+REQ     += XPS8_arbitrary_autosave.tpl-req
 
 
 include $(TOP)/configure/RULES

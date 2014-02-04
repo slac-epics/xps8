@@ -255,7 +255,7 @@ static long process( dbCommon *precord )
     if ( (strncmp(prec->sstr, "Not ", 4) != 0) && (pinfo->drbv != prec->drbv) )
     {                                     // first time or when DRBV has changed
         prec->drbv = pinfo->drbv;
-        prec->rbv  = prec->drbv * (2.*prec->dir - 1.) + prec->off;
+        prec->rbv  = prec->drbv * (1. - 2.*prec->dir) + prec->off;
 
         MARK( M_DRBV );
         MARK( M_RBV  );
@@ -308,14 +308,14 @@ static long process( dbCommon *precord )
 
     if ( (prec->hsta & 0x00000100) > 0 )           // Minus end of run activated
     {
-        if ( prec->dir == xps8pDIR_Positive ) msta.Bits.RA_MINUS_LS = 1;
-        else                                  msta.Bits.RA_PLUS_LS  = 1;
+        if ( prec->dir == xps8pDIR_Pos ) msta.Bits.RA_MINUS_LS = 1;
+        else                             msta.Bits.RA_PLUS_LS  = 1;
     }
 
     if ( (prec->hsta & 0x00000200) > 0 )            // Plus end of run activated
     {
-        if ( prec->dir == xps8pDIR_Positive ) msta.Bits.RA_PLUS_LS  = 1;
-        else                                  msta.Bits.RA_MINUS_LS = 1;
+        if ( prec->dir == xps8pDIR_Pos ) msta.Bits.RA_PLUS_LS  = 1;
+        else                             msta.Bits.RA_MINUS_LS = 1;
     }
 
     if ( old_dmov == 1 ) pinfo->poll = 0;
@@ -555,7 +555,7 @@ static long special( dbAddr *pDbAddr, int after )
             do_move1:
             if ( prec->set == xps8pSET_Use )            // do it only when "Use"
             {
-                prec->dval = (prec->val - prec->off) * (2.*prec->dir - 1.);
+                prec->dval = (prec->val - prec->off) * (1. - 2.*prec->dir);
                 MARK( M_DVAL );
             }
             goto do_move2;
@@ -592,12 +592,12 @@ static long special( dbAddr *pDbAddr, int after )
                 break;
             }
 
-            prec->val = prec->dval * (2.*prec->dir - 1.) + prec->off;
+            prec->val = prec->dval * (1. - 2.*prec->dir) + prec->off;
             MARK( M_VAL  );
 
             do_move2:
-            if ( (prec->set != xps8pSET_Use) ||              // do it only when
-                 (prec->spg != xps8pSPG_Go )    ) break;     // "Set" and "Go"
+            if ( (prec->set != xps8pSET_Use) ||               // do it only when
+                 (prec->spg != xps8pSPG_Go )    ) break;      // "Set" and "Go"
 
             strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname, 80 );
 
@@ -822,9 +822,9 @@ static long special( dbAddr *pDbAddr, int after )
                 break;
             }
 
-            nval   = prec->dllm * (2.*prec->dir - 1.) + prec->off;
+            nval   = prec->dllm * (1. - 2.*prec->dir) + prec->off;
 
-            if ( prec->dir == xps8pDIR_Positive )
+            if ( prec->dir == xps8pDIR_Pos )
             {
                 prec->llm = nval;
                 db_post_events( prec, &prec->llm,  DBE_VAL_LOG );
@@ -871,9 +871,9 @@ static long special( dbAddr *pDbAddr, int after )
                 break;
             }
 
-            nval   = prec->dhlm * (2.*prec->dir - 1.) + prec->off;
+            nval   = prec->dhlm * (1. - 2.*prec->dir) + prec->off;
 
-            if ( prec->dir == xps8pDIR_Positive )
+            if ( prec->dir == xps8pDIR_Pos )
             {
                 prec->hlm = nval;
                 db_post_events( prec, &prec->hlm,  DBE_VAL_LOG );
@@ -886,9 +886,9 @@ static long special( dbAddr *pDbAddr, int after )
 
             goto check_limit_violation;
         case ( xps8pRecordLLM  ):
-            nval = (prec->llm - prec->off) * (2.*prec->dir - 1.);
+            nval = (prec->llm - prec->off) * (1. - 2.*prec->dir);
 
-            if ( prec->dir == xps8pDIR_Positive )
+            if ( prec->dir == xps8pDIR_Pos )
             {
                 if ( (nval < prec->sllm) || (nval > prec->dhlm) )
                 {
@@ -933,9 +933,9 @@ static long special( dbAddr *pDbAddr, int after )
 
             goto check_limit_violation;
         case ( xps8pRecordHLM  ):
-            nval = (prec->hlm - prec->off) * (2.*prec->dir - 1.);
+            nval = (prec->hlm - prec->off) * (1. - 2.*prec->dir);
 
-            if ( prec->dir == xps8pDIR_Positive )
+            if ( prec->dir == xps8pDIR_Pos )
             {
                 if ( (nval > prec->shlm) || (nval < prec->dllm) )
                 {
@@ -1054,7 +1054,7 @@ static long special( dbAddr *pDbAddr, int after )
         case ( xps8pRecordDIR  ):
             if ( prec->dir == prec->oval ) break;
 
-            if ( prec->dir == xps8pDIR_Positive )
+            if ( prec->dir == xps8pDIR_Pos )
             {
                 hllm      = prec->off - prec->hlm;
                 hhlm      = prec->off - prec->llm;
@@ -1076,11 +1076,11 @@ static long special( dbAddr *pDbAddr, int after )
             prec->llm += prec->off - prec->oval;
             prec->hlm += prec->off - prec->oval;
 
-            dval       = (prec->val - prec->oval) * (2.*prec->dir - 1.);
+            dval       = (prec->val - prec->oval) * (1. - 2.*prec->dir);
 
             change_dir_off:
-            prec->val  =       dval * (2.*prec->dir - 1.) + prec->off;
-            prec->rbv  = prec->drbv * (2.*prec->dir - 1.) + prec->off;
+            prec->val  =       dval * (1. - 2.*prec->dir) + prec->off;
+            prec->rbv  = prec->drbv * (1. - 2.*prec->dir) + prec->off;
 
             db_post_events( prec, &prec->llm,  DBE_VAL_LOG );
             db_post_events( prec, &prec->hlm,  DBE_VAL_LOG );
@@ -1097,8 +1097,8 @@ static long special( dbAddr *pDbAddr, int after )
             {                    // can only Use/Set position in a "Ready state"
                 if ( prec->set == xps8pSET_Use )
                 {
-                    prec->off = prec->val - prec->dval * (2.*prec->dir - 1.);
-                    prec->rbv = prec->drbv * (2.*prec->dir - 1.) + prec->off;
+                    prec->off = prec->val - prec->dval * (1. - 2.*prec->dir);
+                    prec->rbv = prec->drbv * (1. - 2.*prec->dir) + prec->off;
                     db_post_events( prec, &prec->off,  DBE_VAL_LOG );
                     db_post_events( prec, &prec->rbv,  DBE_VAL_LOG );
 
@@ -1168,15 +1168,15 @@ static long special( dbAddr *pDbAddr, int after )
             prec->dllm = prec->sllm;
             prec->dhlm = prec->shlm;
 
-            if ( prec->dir == xps8pDIR_Positive )
+            if ( prec->dir == xps8pDIR_Pos )
             {
-                prec->llm  = prec->dllm * (2.*prec->dir - 1.) + prec->off;
-                prec->hlm  = prec->dhlm * (2.*prec->dir - 1.) + prec->off;
+                prec->llm  = prec->dllm * (1. - 2.*prec->dir) + prec->off;
+                prec->hlm  = prec->dhlm * (1. - 2.*prec->dir) + prec->off;
             }
             else
             {
-                prec->llm  = prec->dhlm * (2.*prec->dir - 1.) + prec->off;
-                prec->hlm  = prec->dllm * (2.*prec->dir - 1.) + prec->off;
+                prec->llm  = prec->dhlm * (1. - 2.*prec->dir) + prec->off;
+                prec->hlm  = prec->dllm * (1. - 2.*prec->dir) + prec->off;
             }
 
             db_post_events( prec, &prec->dllm, DBE_VAL_LOG );
@@ -1599,9 +1599,9 @@ static void check_software_limits( xps8pRecord *prec )
 {
     double  uval;
 
-    uval = prec->dllm * (2.*prec->dir - 1.) + prec->off;
+    uval = prec->dllm * (1. - 2.*prec->dir) + prec->off;
 
-    if      ( (prec->dir == xps8pDIR_Positive ) && (prec->llm < uval) )
+    if      ( (prec->dir == xps8pDIR_Pos ) && (prec->llm < uval) )
     {
         prec->llm  = uval;
         db_post_events( prec, &prec->llm,  DBE_VAL_LOG );
@@ -1611,7 +1611,7 @@ static void check_software_limits( xps8pRecord *prec )
         db_post_events( prec, &prec->err,  DBE_VAL_LOG );
         db_post_events( prec,  prec->estr, DBE_VAL_LOG );
     }
-    else if ( (prec->dir == xps8pDIR_Negative ) && (prec->hlm > uval) )
+    else if ( (prec->dir == xps8pDIR_Neg ) && (prec->hlm > uval) )
     {
         prec->hlm  = uval;
         db_post_events( prec, &prec->hlm,  DBE_VAL_LOG );
@@ -1622,9 +1622,9 @@ static void check_software_limits( xps8pRecord *prec )
         db_post_events( prec,  prec->estr, DBE_VAL_LOG );
     }
 
-    uval = prec->dhlm * (2.*prec->dir - 1.) + prec->off;
+    uval = prec->dhlm * (1. - 2.*prec->dir) + prec->off;
 
-    if      ( (prec->dir == xps8pDIR_Positive) && (prec->hlm > uval) )
+    if      ( (prec->dir == xps8pDIR_Pos) && (prec->hlm > uval) )
     {
         prec->hlm  = uval;
         db_post_events( prec, &prec->hlm,  DBE_VAL_LOG );
@@ -1634,7 +1634,7 @@ static void check_software_limits( xps8pRecord *prec )
         db_post_events( prec, &prec->err,  DBE_VAL_LOG );
         db_post_events( prec,  prec->estr, DBE_VAL_LOG );
     }
-    else if ( (prec->dir == xps8pDIR_Negative) && (prec->llm < uval) )
+    else if ( (prec->dir == xps8pDIR_Neg) && (prec->llm < uval) )
     {
         prec->llm  = uval;
         db_post_events( prec, &prec->llm,  DBE_VAL_LOG );
