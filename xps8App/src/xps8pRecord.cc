@@ -715,6 +715,28 @@ static long special( dbAddr *pDbAddr, int after )
             pinfo->uEvent->signal();
 
             break;
+        case ( xps8pRecordSTOP ):
+            prec->stop = 0;
+
+            if ( prec->mip&MIP_MOVE == 0 ) break;
+
+            strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname, 80 );
+
+            pinfo->uMutex->lock();
+            status = GroupMoveAbort( pinfo->msocket, gName );
+            pinfo->poll = 1;
+            pinfo->uMutex->unlock();
+
+            prec->mip |= MIP_STOP;
+            log_msg( prec, 0, "Stopping ..." );
+
+            MARK( M_MIP  );
+
+            epicsThreadSleep( 0.1 );
+
+            pinfo->uEvent->signal();
+
+            break;
         case ( xps8pRecordKILL ):
             if ( prec->spg != xps8pSPG_Go ) break; // do it when "Go" is choosed
 

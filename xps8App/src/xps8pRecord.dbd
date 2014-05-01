@@ -366,6 +366,11 @@ recordtype(xps8p) {
                 asl(ASL0)
                 initial("2")
         }
+        field(STOP,DBF_SHORT) {
+                prompt("Single Stop")
+                special(SPC_MOD)
+                asl(ASL0)
+        }
         field(TWF,DBF_SHORT) {
                 prompt("Tweak Forward")
                 special(SPC_MOD)
