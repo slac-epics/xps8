@@ -55,6 +55,18 @@ record(scalcout, "$(POS1):UTC") {
   field(CALC, "INT(AA)")
 }
 
+record(stringout, "$(POS1):FW_MEANS") {
+  field(DESC, "Meaning of Forward")
+  field(VAL,  "+")
+  field(PINI, "YES")
+}
+
+record(stringout, "$(POS1):REV_MEANS") {
+  field(DESC, "Meaning of Reverse")
+  field(VAL,  "-")
+  field(PINI, "YES")
+}
+
 record(xps8p, "$(POS2)") {
   field(CARD, "1")
   field(FLNK, "$(POS2):TS")
@@ -80,6 +92,18 @@ record(scalcout, "$(POS2):UTC") {
   field(DESC, "UTC Seconds of Last Update")
   field(INAA, "$(POS2):UTCS")
   field(CALC, "INT(AA)")
+}
+
+record(stringout, "$(POS2):FW_MEANS") {
+  field(DESC, "Meaning of Forward")
+  field(VAL,  "+")
+  field(PINI, "YES")
+}
+
+record(stringout, "$(POS2):REV_MEANS") {
+  field(DESC, "Meaning of Reverse")
+  field(VAL,  "-")
+  field(PINI, "YES")
 }
 
 record(xps8p, "$(POS3)") {
@@ -109,6 +133,18 @@ record(scalcout, "$(POS3):UTC") {
   field(CALC, "INT(AA)")
 }
 
+record(stringout, "$(POS3):FW_MEANS") {
+  field(DESC, "Meaning of Forward")
+  field(VAL,  "+")
+  field(PINI, "YES")
+}
+
+record(stringout, "$(POS3):REV_MEANS") {
+  field(DESC, "Meaning of Reverse")
+  field(VAL,  "-")
+  field(PINI, "YES")
+}
+
 record(xps8p, "$(POS4)") {
   field(CARD, "3")
   field(FLNK, "$(POS4):TS")
@@ -134,6 +170,18 @@ record(scalcout, "$(POS4):UTC") {
   field(DESC, "UTC Seconds of Last Update")
   field(INAA, "$(POS4):UTCS")
   field(CALC, "INT(AA)")
+}
+
+record(stringout, "$(POS4):FW_MEANS") {
+  field(DESC, "Meaning of Forward")
+  field(VAL,  "+")
+  field(PINI, "YES")
+}
+
+record(stringout, "$(POS4):REV_MEANS") {
+  field(DESC, "Meaning of Reverse")
+  field(VAL,  "-")
+  field(PINI, "YES")
 }
 
 record(xps8p, "$(POS5)") {
@@ -163,6 +211,18 @@ record(scalcout, "$(POS5):UTC") {
   field(CALC, "INT(AA)")
 }
 
+record(stringout, "$(POS5):FW_MEANS") {
+  field(DESC, "Meaning of Forward")
+  field(VAL,  "+")
+  field(PINI, "YES")
+}
+
+record(stringout, "$(POS5):REV_MEANS") {
+  field(DESC, "Meaning of Reverse")
+  field(VAL,  "-")
+  field(PINI, "YES")
+}
+
 record(xps8p, "$(POS6)") {
   field(CARD, "5")
   field(FLNK, "$(POS6):TS")
@@ -188,6 +248,18 @@ record(scalcout, "$(POS6):UTC") {
   field(DESC, "UTC Seconds of Last Update")
   field(INAA, "$(POS6):UTCS")
   field(CALC, "INT(AA)")
+}
+
+record(stringout, "$(POS6):FW_MEANS") {
+  field(DESC, "Meaning of Forward")
+  field(VAL,  "+")
+  field(PINI, "YES")
+}
+
+record(stringout, "$(POS6):REV_MEANS") {
+  field(DESC, "Meaning of Reverse")
+  field(VAL,  "-")
+  field(PINI, "YES")
 }
 
 record(xps8p, "$(POS7)") {
@@ -217,6 +289,18 @@ record(scalcout, "$(POS7):UTC") {
   field(CALC, "INT(AA)")
 }
 
+record(stringout, "$(POS7):FW_MEANS") {
+  field(DESC, "Meaning of Forward")
+  field(VAL,  "+")
+  field(PINI, "YES")
+}
+
+record(stringout, "$(POS7):REV_MEANS") {
+  field(DESC, "Meaning of Reverse")
+  field(VAL,  "-")
+  field(PINI, "YES")
+}
+
 record(xps8p, "$(POS8)") {
   field(CARD, "7")
   field(FLNK, "$(POS8):TS")
@@ -242,6 +326,18 @@ record(scalcout, "$(POS8):UTC") {
   field(DESC, "UTC Seconds of Last Update")
   field(INAA, "$(POS8):UTCS")
   field(CALC, "INT(AA)")
+}
+
+record(stringout, "$(POS8):FW_MEANS") {
+  field(DESC, "Meaning of Forward")
+  field(VAL,  "+")
+  field(PINI, "YES")
+}
+
+record(stringout, "$(POS8):REV_MEANS") {
+  field(DESC, "Meaning of Reverse")
+  field(VAL,  "-")
+  field(PINI, "YES")
 }
 
 record(calcout, "$(POS1):Update") {
