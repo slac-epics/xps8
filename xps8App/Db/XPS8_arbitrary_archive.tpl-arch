@@ -33,6 +33,9 @@ $(POS1).RTRY    86400    monitor
 $(POS1).UINT    86400    monitor
 $(POS1).PDBD    86400    monitor
 
+$(POS1):FW_MEANS     86400    monitor
+$(POS1):REV_MEANS    86400    monitor
+
 $(POS2).PTYP    86400    monitor
 $(POS2).DESC    86400    monitor
 $(POS2).VAL     86400    monitor
@@ -62,6 +65,9 @@ $(POS2).RDBD    86400    monitor
 $(POS2).RTRY    86400    monitor
 $(POS2).UINT    86400    monitor
 $(POS2).PDBD    86400    monitor
+
+$(POS2):FW_MEANS     86400    monitor
+$(POS2):REV_MEANS    86400    monitor
 
 $(POS3).PTYP    86400    monitor
 $(POS3).DESC    86400    monitor
@@ -93,6 +99,9 @@ $(POS3).RTRY    86400    monitor
 $(POS3).UINT    86400    monitor
 $(POS3).PDBD    86400    monitor
 
+$(POS3):FW_MEANS     86400    monitor
+$(POS3):REV_MEANS    86400    monitor
+
 $(POS4).PTYP    86400    monitor
 $(POS4).DESC    86400    monitor
 $(POS4).VAL     86400    monitor
@@ -122,6 +131,9 @@ $(POS4).RDBD    86400    monitor
 $(POS4).RTRY    86400    monitor
 $(POS4).UINT    86400    monitor
 $(POS4).PDBD    86400    monitor
+
+$(POS4):FW_MEANS     86400    monitor
+$(POS4):REV_MEANS    86400    monitor
 
 $(POS5).PTYP    86400    monitor
 $(POS5).DESC    86400    monitor
@@ -153,6 +165,9 @@ $(POS5).RTRY    86400    monitor
 $(POS5).UINT    86400    monitor
 $(POS5).PDBD    86400    monitor
 
+$(POS5):FW_MEANS     86400    monitor
+$(POS5):REV_MEANS    86400    monitor
+
 $(POS6).PTYP    86400    monitor
 $(POS6).DESC    86400    monitor
 $(POS6).VAL     86400    monitor
@@ -182,6 +197,9 @@ $(POS6).RDBD    86400    monitor
 $(POS6).RTRY    86400    monitor
 $(POS6).UINT    86400    monitor
 $(POS6).PDBD    86400    monitor
+
+$(POS6):FW_MEANS     86400    monitor
+$(POS6):REV_MEANS    86400    monitor
 
 $(POS7).PTYP    86400    monitor
 $(POS7).DESC    86400    monitor
@@ -213,6 +231,9 @@ $(POS7).RTRY    86400    monitor
 $(POS7).UINT    86400    monitor
 $(POS7).PDBD    86400    monitor
 
+$(POS7):FW_MEANS     86400    monitor
+$(POS7):REV_MEANS    86400    monitor
+
 $(POS8).PTYP    86400    monitor
 $(POS8).DESC    86400    monitor
 $(POS8).VAL     86400    monitor
@@ -242,4 +263,7 @@ $(POS8).RDBD    86400    monitor
 $(POS8).RTRY    86400    monitor
 $(POS8).UINT    86400    monitor
 $(POS8).PDBD    86400    monitor
+
+$(POS8):FW_MEANS     86400    monitor
+$(POS8):REV_MEANS    86400    monitor
 

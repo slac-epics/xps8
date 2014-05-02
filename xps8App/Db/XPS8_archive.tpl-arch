@@ -33,6 +33,9 @@ $(DEVICE):$(C1).RTRY    86400    monitor
 $(DEVICE):$(C1).UINT    86400    monitor
 $(DEVICE):$(C1).PDBD    86400    monitor
 
+$(DEVICE):$(C1):FW_MEANS     86400    monitor
+$(DEVICE):$(C1):REV_MEANS    86400    monitor
+
 $(DEVICE):$(C2).PTYP    86400    monitor
 $(DEVICE):$(C2).DESC    86400    monitor
 $(DEVICE):$(C2).VAL     86400    monitor
@@ -62,6 +65,9 @@ $(DEVICE):$(C2).RDBD    86400    monitor
 $(DEVICE):$(C2).RTRY    86400    monitor
 $(DEVICE):$(C2).UINT    86400    monitor
 $(DEVICE):$(C2).PDBD    86400    monitor
+
+$(DEVICE):$(C2):FW_MEANS     86400    monitor
+$(DEVICE):$(C2):REV_MEANS    86400    monitor
 
 $(DEVICE):$(C3).PTYP    86400    monitor
 $(DEVICE):$(C3).DESC    86400    monitor
@@ -93,6 +99,9 @@ $(DEVICE):$(C3).RTRY    86400    monitor
 $(DEVICE):$(C3).UINT    86400    monitor
 $(DEVICE):$(C3).PDBD    86400    monitor
 
+$(DEVICE):$(C3):FW_MEANS     86400    monitor
+$(DEVICE):$(C3):REV_MEANS    86400    monitor
+
 $(DEVICE):$(C4).PTYP    86400    monitor
 $(DEVICE):$(C4).DESC    86400    monitor
 $(DEVICE):$(C4).VAL     86400    monitor
@@ -122,6 +131,9 @@ $(DEVICE):$(C4).RDBD    86400    monitor
 $(DEVICE):$(C4).RTRY    86400    monitor
 $(DEVICE):$(C4).UINT    86400    monitor
 $(DEVICE):$(C4).PDBD    86400    monitor
+
+$(DEVICE):$(C4):FW_MEANS     86400    monitor
+$(DEVICE):$(C4):REV_MEANS    86400    monitor
 
 $(DEVICE):$(C5).PTYP    86400    monitor
 $(DEVICE):$(C5).DESC    86400    monitor
@@ -153,6 +165,9 @@ $(DEVICE):$(C5).RTRY    86400    monitor
 $(DEVICE):$(C5).UINT    86400    monitor
 $(DEVICE):$(C5).PDBD    86400    monitor
 
+$(DEVICE):$(C5):FW_MEANS     86400    monitor
+$(DEVICE):$(C5):REV_MEANS    86400    monitor
+
 $(DEVICE):$(C6).PTYP    86400    monitor
 $(DEVICE):$(C6).DESC    86400    monitor
 $(DEVICE):$(C6).VAL     86400    monitor
@@ -182,6 +197,9 @@ $(DEVICE):$(C6).RDBD    86400    monitor
 $(DEVICE):$(C6).RTRY    86400    monitor
 $(DEVICE):$(C6).UINT    86400    monitor
 $(DEVICE):$(C6).PDBD    86400    monitor
+
+$(DEVICE):$(C6):FW_MEANS     86400    monitor
+$(DEVICE):$(C6):REV_MEANS    86400    monitor
 
 $(DEVICE):$(C7).PTYP    86400    monitor
 $(DEVICE):$(C7).DESC    86400    monitor
@@ -213,6 +231,9 @@ $(DEVICE):$(C7).RTRY    86400    monitor
 $(DEVICE):$(C7).UINT    86400    monitor
 $(DEVICE):$(C7).PDBD    86400    monitor
 
+$(DEVICE):$(C7):FW_MEANS     86400    monitor
+$(DEVICE):$(C7):REV_MEANS    86400    monitor
+
 $(DEVICE):$(C8).PTYP    86400    monitor
 $(DEVICE):$(C8).DESC    86400    monitor
 $(DEVICE):$(C8).VAL     86400    monitor
@@ -242,4 +263,7 @@ $(DEVICE):$(C8).RDBD    86400    monitor
 $(DEVICE):$(C8).RTRY    86400    monitor
 $(DEVICE):$(C8).UINT    86400    monitor
 $(DEVICE):$(C8).PDBD    86400    monitor
+
+$(DEVICE):$(C8):FW_MEANS     86400    monitor
+$(DEVICE):$(C8):REV_MEANS    86400    monitor
 
