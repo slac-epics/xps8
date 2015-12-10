@@ -390,6 +390,16 @@ recordtype(xps8p) {
                 asl(ASL0)
                 initial("0.5")
         }
+        field(JOGF,DBF_SHORT) {
+                prompt("Jog Forward")
+                special(SPC_MOD)
+                interest(1)
+        }
+        field(JOGR,DBF_SHORT) {
+                prompt("Jog Reverse")
+                special(SPC_MOD)
+                interest(1)
+        }
         field(VAL,DBF_DOUBLE) {
                 prompt("User Desired Value (EGU)")
                 special(SPC_MOD)

@@ -111,6 +111,7 @@ struct positioner_info
     int                  state;
     char                 sstr[80];
     double               drbv;
+    double               velo;
 
     epicsMutex          *lMutex;
     int                  nMessages;
@@ -135,18 +136,21 @@ static void post_fields( xps8pRecord *prec, unsigned short alarm_mask,
 static void post_msgs  ( xps8pRecord *prec                                 );
 
 #define MIP_DONE     0x0000    // No motion is in progress
-#define MIP_HOMF     0x0008    // A home-forward command is in progress
-#define MIP_HOMR     0x0010    // A home-reverse command is in progress
+#define MIP_MOVE     0x0001    // A move not resulting from Jog* or Hom*
+#define MIP_RETRY    0x0002    // A retry is in progress
+#define MIP_NEW      0x0004    // Stop current move for a new move
+#define MIP_HOMF     0x0010    // A home-forward command is in progress
+#define MIP_HOMR     0x0020    // A home-reverse command is in progress
 #define MIP_HOME     (MIP_HOMF | MIP_HOMR)
-#define MIP_MOVE     0x0020    // A move not resulting from Jog* or Hom*
-#define MIP_RETRY    0x0040    // A retry is in progress
-#define MIP_NEWM     0x0080    // Stop current move for a new move
-#define MIP_STOP     0x0200    // We're trying to stop.  If a home command
+#define MIP_JOGF     0x0100    // Jog forward
+#define MIP_JOGR     0x0200    // Jog backward
+#define MIP_JOG      (MIP_JOGF | MIP_JOGR)
+#define MIP_PAUSE    0x1000    // Move is paused
+#define MIP_STOP     0x2000    // We're trying to stop.  If a home command
                                // is issued when the motor is moving, we
                                // stop the motor first
-#define MIP_PAUSE    0x0400    // Move is paused
-#define MIP_KILL     0x1000    // A kill command is in progress
-#define MIP_INIT     0x2000    // A initialize command is in progress
+#define MIP_KILL     0x4000    // A kill command is in progress
+#define MIP_INIT     0x8000    // A initialize command is in progress
 
 extern int xps8Debug;
 
@@ -263,6 +267,15 @@ static long process( dbCommon *precord )
 
     if ( pinfo->update != 9 )                    // still moving, partial update
     {
+        if ( (prec->mip & MIP_JOG) && (prec->mip & MIP_STOP) )
+            if ( fabs(pinfo->velo) < 1.e-9 )
+            {
+                char gName[80];
+
+                strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname, 80 );
+                status = GroupJogModeDisable( pinfo->msocket, gName );
+            }
+
         pinfo->update = 0;
         pinfo->uMutex->unlock();
         msta.All = prec->msta;
@@ -353,7 +366,7 @@ static long process( dbCommon *precord )
             prec->dval = prec->drbv;
         }
     }
-    else if ( !(prec->mip & MIP_NEWM) || (prec->snum != 10) )
+    else if ( !(prec->mip & MIP_NEW) || (prec->snum != 10) )
     {                                                  // was moving or retrying
         prec->diff = prec->rbv - prec->val;
         if ( (fabs(prec->diff) >= prec->rdbd) &&
@@ -462,7 +475,7 @@ static long special( dbAddr *pDbAddr, int after )
     positioner_info *pinfo = (positioner_info *)prec->dpvt;
     int              fieldIndex = dbGetFieldIndex( pDbAddr );
     char             gName[80], pName[80], par[80], pstr[80];
-    double           nval, hllm, hhlm, dval;
+    double           nval, hllm, hhlm, dval, velo;
     unsigned short   alarm_mask = 0;
 
     long             status = 0;
@@ -609,7 +622,7 @@ static long special( dbAddr *pDbAddr, int after )
                 status = GroupMoveAbort( pinfo->msocket, gName );
                 pinfo->uMutex->unlock();
 
-                prec->mip  = MIP_NEWM;
+                prec->mip  = MIP_NEW;
 
                 epicsThreadSleep( 0.3 );
             }
@@ -679,6 +692,81 @@ static long special( dbAddr *pDbAddr, int after )
             prec->val = nval;
             MARK( M_VAL  );
             goto do_move1;
+        case ( xps8pRecordJOGF ):
+        case ( xps8pRecordJOGR ):
+            if ( (prec->jogf == 0) && (prec->jogr == 0) )
+            {
+                if ( prec->mip & MIP_JOG ) goto do_stop;         // stop jogging
+
+                break;
+            }
+            else if ( (prec->set != xps8pSET_Use)             ||// jog only when
+                      (prec->spg != xps8pSPG_Go )             ||// "Set", "Go" &
+                      (strncmp(prec->sstr, "Ready ", 6) != 0)    )    // "Ready"
+            {
+                prec->jogf =   0;
+                prec->jogr =   0;
+
+                prec->err  = 999;
+                if      ( prec->set != xps8pSET_Use )
+                    sprintf( prec->estr, "Can only jog in \"Use\" mode"      );
+                else if ( prec->spg != xps8pSPG_Go  )
+                    sprintf( prec->estr, "Can only jog when \"Go\""          );
+                else
+                    sprintf( prec->estr, "Can only jog in a \"Ready\" state" );
+
+                MARK( M_ERR  );
+
+                break;
+            }
+
+            strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname, 80 );
+
+            pinfo->uMutex->lock();
+
+            status = GroupJogModeEnable( pinfo->msocket, gName );
+
+            epicsThreadSleep( 0.2 );
+
+            if ( prec->jogf > 0 )
+            {
+                if ( prec->dir == xps8pDIR_Pos ) velo =   prec->velo;
+                else                             velo = - prec->velo;
+
+                prec->mip  = MIP_JOGF;
+                log_msg( prec, 0, "Jogging forward ..." );
+            }
+            else
+            {
+                if ( prec->dir == xps8pDIR_Pos ) velo = - prec->velo;
+                else                             velo =   prec->velo;
+
+                prec->mip  = MIP_JOGR;
+                log_msg( prec, 0, "Jogging backward ..." );
+            }
+
+            status = GroupJogParametersSet( pinfo->msocket, pName, 1,
+                                            &velo, &prec->accl );
+
+            pinfo->poll = 1;
+            pinfo->uMutex->unlock();
+
+            prec->lvio = 0;
+            prec->movn = 1;
+            prec->dmov = 0;
+            prec->rcnt = 0;
+
+            MARK( M_LVIO );
+            MARK( M_MIP  );
+            MARK( M_MOVN );
+            MARK( M_DMOV );
+            MARK( M_RCNT );
+
+            epicsThreadSleep( 0.1 );
+
+            pinfo->uEvent->signal();
+
+            break;
         case ( xps8pRecordSPG  ):
             if ( (prec->spg == prec->oval) || (prec->mip&MIP_MOVE == 0) ) break;
 
@@ -718,7 +806,8 @@ static long special( dbAddr *pDbAddr, int after )
         case ( xps8pRecordSTOP ):
             prec->stop = 0;
 
-            if ( prec->mip&MIP_MOVE == 0 ) break;
+            do_stop:
+            if ( prec->mip & (MIP_MOVE | MIP_JOG) == 0 ) break;
 
             strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname, 80 );
 
@@ -1713,7 +1802,7 @@ static void checkStatus( struct positioner_info *pinfo )
     timespec     uTime;
 
     long         dsec, dnsec, status;
-    double       dtime;
+    double       dtime, accl;
 
     gName = XPS8_Ctrl->positioner[pinfo->precord->card].gname;
     pName = XPS8_Ctrl->positioner[pinfo->precord->card].pname;
@@ -1783,7 +1872,13 @@ static void checkStatus( struct positioner_info *pinfo )
             pinfo->update = 9;
         }
         else
+        {
             pinfo->update = 1;
+
+            if ( (prec->mip & MIP_JOG) && (prec->mip & MIP_STOP) )
+                status |= GroupJogCurrentGet( pinfo->usocket, gName, 1,
+                                              &pinfo->velo, &accl );
+        }
 
         log_msg( prec, 2, "State: %d -- %s", pinfo->state, pinfo->sstr );
 
