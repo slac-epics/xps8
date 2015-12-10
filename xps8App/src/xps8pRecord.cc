@@ -268,6 +268,7 @@ static long process( dbCommon *precord )
     if ( pinfo->update != 9 )                    // still moving, partial update
     {
         if ( (prec->mip & MIP_JOG) && (prec->mip & MIP_STOP) )
+        {
             if ( fabs(pinfo->velo) < 1.e-9 )
             {
                 char gName[80];
@@ -275,6 +276,7 @@ static long process( dbCommon *precord )
                 strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname, 80 );
                 status = GroupJogModeDisable( pinfo->msocket, gName );
             }
+        }
 
         pinfo->update = 0;
         pinfo->uMutex->unlock();
@@ -639,7 +641,8 @@ static long special( dbAddr *pDbAddr, int after )
             pinfo->uMutex->unlock();
 
             prec->lvio = 0;
-            prec->mip |= MIP_MOVE;
+            prec->mip &= ~MIP_PAUSE;
+            prec->mip |=  MIP_MOVE;
             prec->movn = 1;
             prec->dmov = 0;
             prec->rcnt = 0;
@@ -720,14 +723,6 @@ static long special( dbAddr *pDbAddr, int after )
                 break;
             }
 
-            strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname, 80 );
-
-            pinfo->uMutex->lock();
-
-            status = GroupJogModeEnable( pinfo->msocket, gName );
-
-            epicsThreadSleep( 0.2 );
-
             if ( prec->jogf > 0 )
             {
                 if ( prec->dir == xps8pDIR_Pos ) velo =   prec->velo;
@@ -745,7 +740,15 @@ static long special( dbAddr *pDbAddr, int after )
                 log_msg( prec, 0, "Jogging backward ..." );
             }
 
-            status = GroupJogParametersSet( pinfo->msocket, pName, 1,
+            strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname, 80 );
+
+            pinfo->uMutex->lock();
+
+            status = GroupJogModeEnable   ( pinfo->msocket, gName );
+
+            epicsThreadSleep( 0.2 );
+
+            status = GroupJogParametersSet( pinfo->msocket, gName, 1,
                                             &velo, &prec->accl );
 
             pinfo->poll = 1;
@@ -768,19 +771,54 @@ static long special( dbAddr *pDbAddr, int after )
 
             break;
         case ( xps8pRecordSPG  ):
-            if ( (prec->spg == prec->oval) || (prec->mip&MIP_MOVE == 0) ) break;
+            if ( (prec->spg == prec->oval            ) ||
+                 (prec->mip&(MIP_MOVE | MIP_JOG) == 0)    ) break;
 
             if ( prec->spg == xps8pSPG_Go )
             {
-                if ( prec->mip == MIP_DONE ) break;
-                else                         goto do_move2;
+                if      ( prec->mip &  MIP_MOVE ) goto do_move2;
+                else if ( prec->mip &  MIP_JOG  )
+                {
+                    if ( prec->jogf > 0 )
+                    {
+                        if ( prec->dir == xps8pDIR_Pos ) velo =   prec->velo;
+                        else                             velo = - prec->velo;
+
+                        log_msg( prec, 0, "Jogging forward ..." );
+                    }
+                    else
+                    {
+                        if ( prec->dir == xps8pDIR_Pos ) velo = - prec->velo;
+                        else                             velo =   prec->velo;
+
+                        log_msg( prec, 0, "Jogging backward ..." );
+                    }
+
+                    prec->mip  &= ~MIP_PAUSE;
+
+                    strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname,80);
+
+                    pinfo->uMutex->lock();
+                    status = GroupJogParametersSet( pinfo->msocket, gName, 1,
+                                                    &velo, &prec->accl );
+                    pinfo->uMutex->unlock();
+                }
             }
             else
             {
                 strncpy( gName, XPS8_Ctrl->positioner[prec->card].gname, 80 );
 
                 pinfo->uMutex->lock();
-                status = GroupMoveAbort( pinfo->msocket, gName );
+
+                if ( (prec->spg == xps8pSPG_Stop) || (prec->mip & MIP_MOVE) )
+                    status = GroupMoveAbort       ( pinfo->msocket, gName );
+                else
+                {
+                    velo   = 0;
+                    status = GroupJogParametersSet( pinfo->msocket, gName, 1,
+                                                    &velo, &prec->accl );
+                }
+
                 pinfo->poll = 1;
                 pinfo->uMutex->unlock();
 
