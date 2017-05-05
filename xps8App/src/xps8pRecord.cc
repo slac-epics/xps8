@@ -106,7 +106,7 @@ struct positioner_info
     int                  hstatus;
     char                 hstr[80];
     int                  error;
-    char                 estr[80];
+    char                 estr[800];
 
     int                  state;
     char                 sstr[80];
