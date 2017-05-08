@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <callback.h>
 
@@ -198,7 +199,11 @@ static long init_record( dbCommon *precord, int pass )
 
     prec->dpvt           = pinfo;
 
+#ifdef _BSD_SOURCE || _XOPEN_SOURCE >= 500
     gethostname( prec->host, 60            );
+#else
+    strcpy     ( prec->host, getenv("IOC") );
+#endif
     strcpy     ( prec->iocn, getenv("IOC") );
 
     callbackSetCallback( (void (*)(struct callbackPvt *)) positioner_callback,

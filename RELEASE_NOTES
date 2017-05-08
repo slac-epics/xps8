@@ -1,0 +1,16 @@
+#
+# RELEASE_NOTES
+#
+
+R2.1.0	2017-05-08	Bruce Hill
+	Updated to git workflow
+	Updated modules to latest releases
+	Fixed some minor build errors.
+
+R2.0.0	2014-05-02	Dehong Zhang
+	Add FW_MEANS and REV_MEANS to autosave and archive lists
+	Added a single STOP command; added FW_MEANS and REV_MEANS
+
+R1.0.0	2013-07-31 Dehong Zhang
+	Missed a file, finalized the handling of autosaving and archiving, added a note on the edm
+	Changed too many names, re-import

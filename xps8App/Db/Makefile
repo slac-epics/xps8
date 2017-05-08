@@ -10,11 +10,11 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------------------
 # Create and install (or just install)
 # databases, templates, substitutions like this
-DB_INSTALLS += XPS8.db
-DB_INSTALLS += XPS8_arbitrary.db
+DB += XPS8.db
+DB += XPS8_arbitrary.db
 
-DB_INSTALLS += status_update.db
-DB_INSTALLS += status_update_arbitrary.db
+DB += status_update.db
+DB += status_update_arbitrary.db
 
 #----------------------------------------------------
 # Create and install (or just install)
