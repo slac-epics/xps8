@@ -16,7 +16,7 @@
 # IOC apps or other Support apps
 # ===============================================================
 ASYN_MODULE_VERSION     = R4.31-1.0.0
-CALC_MODULE_VERSION     = R3.6.1-0.1.0
+CALC_MODULE_VERSION     = R3.7-1.0.1
 SSCAN_MODULE_VERSION    = R2.9-1.2.1
 AUTOSAVE_MODULE_VERSION = R5.7.1-2.0.0
 

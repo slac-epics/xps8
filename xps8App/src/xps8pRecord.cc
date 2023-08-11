@@ -49,12 +49,12 @@ static long process      ( dbCommon *precord                  );
 static long special      ( dbAddr   *pDbAddr, int after       );
 static long cvt_dbaddr   ( dbAddr   *pDbAddr                  );
 
+static long get_units    ( dbAddr   *pDbAddr, char *units     );
 static long get_precision( dbAddr   *pDbAddr, long *precision );
 
 #define get_value          NULL
 #define get_array_info     NULL
 #define put_array_info     NULL
-#define get_units          NULL
 #define get_enum_str       NULL
 #define get_enum_strs      NULL
 #define put_enum_str       NULL
@@ -73,7 +73,7 @@ rset xps8pRSET = {
 	(RECSUPFUN) cvt_dbaddr,
 	get_array_info,
 	put_array_info,
-	get_units,
+	(RECSUPFUN) get_units,
 	(RECSUPFUN) get_precision,
 	get_enum_str,
 	get_enum_strs,
@@ -1503,20 +1503,58 @@ static long cvt_dbaddr( dbAddr *pDbAddr )
     return( status );
 }
 
+static long get_units ( dbAddr *pDbAddr, char *units )
+{
+  xps8pRecord *pxr = (xps8pRecord *) pDbAddr->precord;
+  int fieldIndex = dbGetFieldIndex(pDbAddr);
+  int siz = dbr_units_size - 1;
+  char s[30];
+  switch (fieldIndex)
+  {
+  case xps8pRecordSVEL:
+  case xps8pRecordVELO:
+  case xps8pRecordSHVE:
+  case xps8pRecordHVEL:
+    strncpy(s, pxr->egu, DB_UNITS_SIZE);
+    strcat(s, "/sec");
+    break;
+  case xps8pRecordSACC:
+  case xps8pRecordSHAC:
+    strncpy(s, pxr->egu, DB_UNITS_SIZE);
+    strcat(s, "/s/s");
+    break;
+  case xps8pRecordACCL:
+  case xps8pRecordHACC:
+    strcpy(s, "sec");
+    break;
+  default:
+    strncpy(s, pxr->egu, DB_UNITS_SIZE);
+    break;
+  }
+  s[siz] = '\0';
+  strncpy(units, s, siz + 1);
+  return (0);
+}
+
 static long get_precision( dbAddr *pDbAddr, long *precision )
 {
-    int          fieldIndex = dbGetFieldIndex( pDbAddr );
-
-    switch ( fieldIndex )
+    xps8pRecord *pxr = (xps8pRecord *) pDbAddr->precord;
+    int fieldIndex = dbGetFieldIndex(pDbAddr);
+    switch (fieldIndex)
     {
-//      case xps8pRecordVERS:
-//          *precision = 2;
-//          break;
-        default:
-            recGblGetPrec( pDbAddr, precision );
-            break;
+    case xps8pRecordOFF:
+    case xps8pRecordVELO:
+    case xps8pRecordACCL:
+    case xps8pRecordTWV:
+    case xps8pRecordVAL:
+    case xps8pRecordRBV:
+      *precision = pxr->prec;
+      recGblGetPrec( pDbAddr, precision );
+      break;
+    default:
+      *precision = 0;                                                                                                      
+      break;
     }
-
     return ( 0 );
 }
 
